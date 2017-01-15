@@ -11,8 +11,6 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
-"Plugin 'vim-airline/vim-airline'
-"Plugin 'vim-airline/vim-airline-themes'
 Plugin 'scrooloose/nerdtree'
 " For searching
 Plugin 'mileszs/ack.vim'
@@ -21,12 +19,10 @@ Plugin 'scrooloose/syntastic'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'blueshirts/darcula'
-"Plugin 'Valloric/YouCompleteMe'
 Plugin 'sjl/badwolf'
 Plugin 'dracula/vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'ervandew/supertab'
-"Plugin 'raimondi/delimitmate'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'sickill/vim-monokai'
 Plugin 'lifepillar/vim-solarized8'
@@ -36,40 +32,6 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 """"
 """" Plugins
-let g:airline_powerline_fonts = 1
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
-
-" unicode symbols
-let g:airline_left_sep = '»'
-let g:airline_left_sep = '▶'
-let g:airline_right_sep = '«'
-let g:airline_right_sep = '◀'
-let g:airline_symbols.linenr = '␊'
-let g:airline_symbols.linenr = '␤'
-let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
-let g:airline_symbols.paste = 'ρ'
-let g:airline_symbols.paste = 'Þ'
-let g:airline_symbols.paste = '∥'
-let g:airline_symbols.whitespace = 'Ξ'
-
-" airline symbols
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = ''
-let g:airline_symbols.linenr = ''
-set laststatus=2
-" Enable the list of buffers
-let g:airline#extensions#tabline#enabled = 1
-
-" Show just the filename
-let g:airline#extensions#tabline#fnamemod = ':t'
-
 " Align line-wise comment delimiters flush left instead of following code indentation
 let g:NERDDefaultAlign = 'left'
 
@@ -87,9 +49,6 @@ let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/
 let g:syntastic_auto_loc_list = 1
 "let g:syntastic_check_on_open = 1
 "let g:syntastic_check_on_wq = 0
-
-
-let delimitMate_matchpairs = "(:),[:]"
 
 "}}}
 "{{{ Basic Settings
@@ -144,10 +103,7 @@ noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
 
-" Compile using the makefile when f5 is pressed
-"map <F5> :wa<CR> :!clear; make<CR>
-"map <F4> :wa<CR> :!clear; make test<CR>
-" Compile using the makefile when f5 is pressed
+" Compile using the makefile when F5 is pressed
 map <F5> :wa<CR> :!clear; make<CR>
 " Run tests when F4 is pressed
 map <F4> :wa<CR> :!clear; make test<CR>
@@ -164,10 +120,6 @@ inoremap {<CR> {<CR>}<Esc>kox<BS>
 inoremap <CR> <CR>x<BS>
 nnoremap o ox<BS>
 nnoremap O Ox<BS>
-
-" Can't use this because scrolling uses the escape key,
-" and this messes it up
-"nnoremap <silent> <Esc> :noh<Return><Esc>
 
 nnoremap <Leader>o :CtrlP<CR>
 
@@ -221,7 +173,6 @@ nnoremap <Leader>i i<Space><Esc>r
 
 nnoremap J 5<C-e>
 nnoremap K 5<C-y>
-"nnoremap <Leader>u :GundoToggle<CR>
 "}}}
 "{{{ Other
 " Makes Vim jump to the last position when reopening a file
@@ -271,5 +222,4 @@ set statusline+=\ %=[%02{strwidth(getline('.'))}]
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-
 "}}}
