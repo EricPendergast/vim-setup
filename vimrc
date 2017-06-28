@@ -58,14 +58,17 @@ let g:ConqueTerm_Color = 2         " 1: strip color after 200 lines, 2: always w
 let g:ConqueTerm_CloseOnEnd = 1    " close conque when program ends running
 let g:ConqueTerm_StartMessages = 0 " display warning messages if conqueTerm is configured incorrectly
 
+let NERDTreeIgnore = ['\.pyc$']
+
 "}}}
 "{{{ Basic Settings
 filetype plugin on 	"enables different vimrc's for different filetypes
 syntax enable
 
 "colorscheme darcula
-colorscheme badwolf
-"colorscheme PaperColor
+"colorscheme badwolf
+colorscheme PaperColor
+set background=dark
 set shiftwidth=4                " use indents of 4 spaces
 set expandtab                   " tabs are spaces, not tabs
 set tabstop=4                   " an indentation every four columns
@@ -81,7 +84,7 @@ set linebreak 		"makes the lines break at spaces when it wraps
 set mouse=nv 		"allows use of mouse in normal and visual mode (not insert mode)
 set wildmenu		"shows a visual menu for tab completion
 set lazyredraw      "speeds up macros by not redrawing the screen during them
-set termguicolors   "lets the terminal use truecolor (16 million colors)
+"set termguicolors   "lets the terminal use truecolor (16 million colors)
 "set scrolloff=3		"leaves 3 lines between cursor and end of screen
 set foldenable
 set foldmethod=marker
@@ -137,12 +140,10 @@ nnoremap o ox<BS>
 nnoremap O Ox<BS>
 nnoremap S Sx<BS>
 
-"nnoremap <Leader>o :CtrlP<CR>
-
 " Copying and pasting from the system clipboard
 vmap <Leader>y "+y
-nmap <Leader>yy "+yy
-nmap <Leader>dd "+dd
+"nmap <Leader>yy "+yy
+"nmap <Leader>dd "+dd
 vmap <Leader>d "+d
 nmap <Leader>p "+p
 nmap <Leader>P "+P
@@ -211,6 +212,15 @@ vnoremap <S-Tab> <gv
 nnoremap <C-Y> <C-I>
 
 nnoremap <C-F> :ConqueTermSplit bash<CR>ag 
+
+function! SyncTree()
+  if &modifiable
+    NERDTreeFind
+    wincmd p
+  endif
+endfunction
+nnoremap <leader>w :call SyncTree()<CR>
+
 "command :Shell :ConqueTerm bash<CR>
 "}}}
 "{{{ Other
@@ -286,3 +296,41 @@ set statusline+=%=
 set statusline+=\ [%02{strwidth(getline('.'))}]
 set statusline+=\ %3p%%\ 
 "}}}
+
+" Check if NERDTree is open or active
+"function! s:isNERDTreeOpen()
+"  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+"endfunction
+"
+"" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
+"" file, and we're not in vimdiff
+"function! s:syncTree()
+"  if &modifiable && s:isNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
+"    NERDTreeFind
+"    wincmd p
+"  endif
+"endfunction
+
+" Highlight currently open buffer in NERDTree
+"autocmd BufEnter * call s:syncTree()
+
+" Check if NERDTree is open or active
+"function! IsNERDTreeOpen()
+"  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+"endfunction
+"
+"" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
+"" file, and we're not in vimdiff
+"function! SyncTree()
+"  if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
+"    NERDTreeFind
+"    wincmd p
+"  endif
+"endfunction
+
+"
+"" Highlight currently open buffer in NERDTree
+"autocmd BufEnter * call SyncTree()
+"
+"autocmd BufEnter * if (&modifiable && IsNERDTreeOpen()) | NERDTreeFind | wincmd p | endif
+
