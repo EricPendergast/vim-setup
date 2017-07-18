@@ -58,8 +58,10 @@ let g:ConqueTerm_Color = 2         " 1: strip color after 200 lines, 2: always w
 let g:ConqueTerm_CloseOnEnd = 1    " close conque when program ends running
 let g:ConqueTerm_StartMessages = 0 " display warning messages if conqueTerm is configured incorrectly
 
-let NERDTreeIgnore = ['\.pyc$']
+let NERDTreeIgnore = ['\.pyc$', '__init__\.py']
 
+"Makes ctrlp ignore filetypes in the .gitignore, also makes it open faster
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
 "}}}
 "{{{ Basic Settings
 filetype plugin on 	"enables different vimrc's for different filetypes
@@ -88,6 +90,7 @@ set lazyredraw      "speeds up macros by not redrawing the screen during them
 "set scrolloff=3		"leaves 3 lines between cursor and end of screen
 set foldenable
 set foldmethod=marker
+set foldlevel=500
 set foldnestmax=1
 set cursorline      "Shows a visual horizontal line where the cursor is
 " Allows for project specific vimrc's
@@ -211,7 +214,8 @@ vnoremap <S-Tab> <gv
 
 nnoremap <C-Y> <C-I>
 
-nnoremap <C-F> :ConqueTermSplit bash<CR>ag 
+"nnoremap <C-F> :ConqueTermSplit bash<CR>ag
+nnoremap <C-F> <c-w>s<c-w>j:call conque_term#open("bash").write('ag --vimgrep ')<CR>
 
 function! SyncTree()
   if &modifiable
@@ -229,13 +233,31 @@ if has("autocmd")
     au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
 
+
 " allows for truecolor
 if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
+
 " Automatically loads a template when creating a new file
 au BufNewFile * silent! 0r ~/.vim/skeleton/template.%:e
+
+
+" Put plugins and dictionaries in this dir (also on Windows)
+let vimDir = '$HOME/.vim'
+let &runtimepath.=','.vimDir
+
+" Keep undo history across sessions by storing it in a file
+if has('persistent_undo')
+    let myUndoDir = expand(vimDir . '/undodir')
+    " Create dirs
+    call system('mkdir ' . vimDir)
+    call system('mkdir ' . myUndoDir)
+    let &undodir = myUndoDir
+    set undofile
+endif
+
 "}}}
 "{{{ Filetypes
 autocmd Filetype java call SetJavaOptions()
@@ -273,9 +295,6 @@ function SetPythonOptions()
 endfunction
 
 
-"function HasMakefile()
-    "return findfile("Makefile", ".") == "Makefile" || findfile("makefile", ".") == "makefile"
-"endfunction
 "}}}
 "{{{Statusline
 set noruler
@@ -285,7 +304,9 @@ set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
-set statusline+=%t
+"set statusline+=%t
+"File path relative to current working directory
+set statusline+=%{@%}
 set statusline+=%m
 " The file encoding
 "set statusline+=[%{&ff}]
@@ -296,41 +317,3 @@ set statusline+=%=
 set statusline+=\ [%02{strwidth(getline('.'))}]
 set statusline+=\ %3p%%\ 
 "}}}
-
-" Check if NERDTree is open or active
-"function! s:isNERDTreeOpen()
-"  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
-"endfunction
-"
-"" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
-"" file, and we're not in vimdiff
-"function! s:syncTree()
-"  if &modifiable && s:isNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
-"    NERDTreeFind
-"    wincmd p
-"  endif
-"endfunction
-
-" Highlight currently open buffer in NERDTree
-"autocmd BufEnter * call s:syncTree()
-
-" Check if NERDTree is open or active
-"function! IsNERDTreeOpen()
-"  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
-"endfunction
-"
-"" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
-"" file, and we're not in vimdiff
-"function! SyncTree()
-"  if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
-"    NERDTreeFind
-"    wincmd p
-"  endif
-"endfunction
-
-"
-"" Highlight currently open buffer in NERDTree
-"autocmd BufEnter * call SyncTree()
-"
-"autocmd BufEnter * if (&modifiable && IsNERDTreeOpen()) | NERDTreeFind | wincmd p | endif
-
