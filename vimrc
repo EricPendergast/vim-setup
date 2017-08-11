@@ -29,6 +29,7 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'sickill/vim-monokai'
 Plugin 'lifepillar/vim-solarized8'
 Plugin 'NLKNguyen/papercolor-theme'
+Plugin 'tpope/vim-fugitive'
 "Plugin 'kana/vim-submode'
 
 call vundle#end()            " required
@@ -44,6 +45,7 @@ let g:NERDCommentEmptyLines = 1
 " Enable trimming of trailing whitespace when uncommenting
 let g:NERDTrimTrailingWhitespace = 1
 
+
 "Youcompleteme fix
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 
@@ -58,7 +60,7 @@ let g:ConqueTerm_Color = 2         " 1: strip color after 200 lines, 2: always w
 let g:ConqueTerm_CloseOnEnd = 1    " close conque when program ends running
 let g:ConqueTerm_StartMessages = 0 " display warning messages if conqueTerm is configured incorrectly
 
-let NERDTreeIgnore = ['\.pyc$', '__init__\.py']
+let NERDTreeIgnore = ['\.pyc$']
 
 "Makes ctrlp ignore filetypes in the .gitignore, also makes it open faster
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
