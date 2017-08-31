@@ -147,17 +147,11 @@ nnoremap S Sx<BS>
 
 " Copying and pasting from the system clipboard
 vmap <Leader>y "+y
-"nmap <Leader>yy "+yy
-"nmap <Leader>dd "+dd
 vmap <Leader>d "+d
 nmap <Leader>p "+p
 nmap <Leader>P "+P
 vmap <Leader>p "+p
 vmap <Leader>P "+P
-
-" Makes <Leader><CR> insert a carriage return
-"nnoremap <Leader><CR> A<CR><Esc>
-"vnoremap <Leader><CR> c<CR>
 
 " <Leader>s saves session
 noremap <Leader>s :wa<CR>:mks!<CR>
@@ -214,10 +208,13 @@ inoremap <C-W><C-Q> <esc><C-W>q
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
+" Since C-I is the same as tab (which is used elsewhere), C-Y is used as a
+" substitute keymapping
 nnoremap <C-Y> <C-I>
 
-"nnoremap <C-F> :ConqueTermSplit bash<CR>ag
+" Makes ctrl-f run a project-wide search
 nnoremap <C-F> <c-w>s<c-w>j:call conque_term#open("bash").write('ag --vimgrep ')<CR>
+
 
 function! SyncTree()
   if &modifiable
@@ -227,7 +224,14 @@ function! SyncTree()
 endfunction
 nnoremap <leader>w :call SyncTree()<CR>
 
-"command :Shell :ConqueTerm bash<CR>
+
+function! ExecuteMacroOverVisualRange()
+  echo "@".getcmdline()
+  execute ":'<,'>normal @".nr2char(getchar())
+endfunction
+xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+
+
 "}}}
 "{{{ Other
 " Makes Vim jump to the last position when reopening a file
@@ -275,6 +279,7 @@ endfunction
 
 autocmd Filetype cpp call SetCppOptions()
 function SetCppOptions()
+    " Make f6 do a single file compile and run
     nnoremap <f6> :!g++ %<CR>:!./%<CR>
     syn match semicolonComma "\v[;,]" containedin=ALLBUT,Comment
     hi def link semicolonComma Keyword
