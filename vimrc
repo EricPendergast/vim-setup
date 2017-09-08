@@ -197,13 +197,14 @@ nnoremap <C-D> :sh<CR>
 
 """""""" Window stuff
 " open conque shell vsplit
-nnoremap <C-W>b :ConqueTermVSplit bash<CR>
-nnoremap <C-W><C-B> :ConqueTermVSplit bash<CR>
+nnoremap <C-W>B :ConqueTermVSplit bash<CR>
+nnoremap <C-W>b :ConqueTermSplit bash<CR><Esc><C-W>J<C-W>500-<C-W>5+i
+nnoremap <C-W><C-b> :ConqueTermSplit bash<CR><Esc><C-W>J<C-W>500-<C-W>5+i
 
 inoremap <C-W>q <esc><C-W>q
 inoremap <C-W><C-Q> <esc><C-W>q
 
-" so that you can press tab in visual mode, and it will tab all highlighted
+" so that you can press tab in visual mode, and it will indent all highlighted
 " lines
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
