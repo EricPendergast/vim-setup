@@ -30,6 +30,7 @@ Plugin 'sickill/vim-monokai'
 Plugin 'lifepillar/vim-solarized8'
 Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tikhomirov/vim-glsl'
 "Plugin 'kana/vim-submode'
 
 call vundle#end()            " required
@@ -101,6 +102,7 @@ set secure
 
 set ignorecase
 set smartcase
+set virtualedit=block
 
 "}}}
 "{{{ Key Remaps
@@ -124,7 +126,7 @@ noremap <C-l> <C-w>l
 
 " Compile using the makefile when F5 is pressed
 map <F5> :wa<CR> :!clear; make<CR>
-map <C-4> :wa<CR> :!clear; make<CR>
+map <C-5> :wa<CR> :!clear; make<CR>
 " Run tests when F4 is pressed
 map <F4> :wa<CR> :!clear; make test<CR>
 map <C-4> :wa<CR> :!clear; make test<CR>
@@ -178,7 +180,7 @@ nnoremap , za
 cmap w!! w !sudo tee > /dev/null %
 
 " Makes <Leader>h switch between .cpp and .h files
-nnoremap <Leader>h :update<CR>:e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
+nnoremap <Leader>h :update<CR>:e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,:s,.frag$,.X123X,:s,.vert$,.frag,:s,.X123X$,.vert,<CR>
 
 " Makes tab and shft tab go to next and previos tab, respectively
 nnoremap <Tab> gt
@@ -198,8 +200,10 @@ nnoremap <C-D> :sh<CR>
 """""""" Window stuff
 " open conque shell vsplit
 nnoremap <C-W>B :ConqueTermVSplit bash<CR>
-nnoremap <C-W>b :ConqueTermSplit bash<CR><Esc><C-W>J<C-W>500-<C-W>5+i
-nnoremap <C-W><C-b> :ConqueTermSplit bash<CR><Esc><C-W>J<C-W>500-<C-W>5+i
+nnoremap <C-W>b :ConqueTermSplit bash<CR><Esc><C-W>J<C-W>500-<C-W>5+:set wfh<CR>i
+nnoremap <C-W><C-b> :ConqueTermSplit bash<CR><Esc><C-W>J<C-W>500-<C-W>5+:set wfh<CR>i
+
+nnoremap <C-W>D :ConqueGdb<CR><Esc><C-W>J<C-W>500-<C-W>5+:set wfh<CR>i
 
 inoremap <C-W>q <esc><C-W>q
 inoremap <C-W><C-Q> <esc><C-W>q
@@ -281,7 +285,8 @@ endfunction
 autocmd Filetype cpp call SetCppOptions()
 function SetCppOptions()
     " Make f6 do a single file compile and run
-    nnoremap <f6> :!g++ %<CR>:!./%<CR>
+    
+    nnoremap <f6> :!g++ -std=c++17 -g3 -Wconversion -Wall -Werror -Wextra -pedantic %<CR>:!./a.out<CR>
     syn match semicolonComma "\v[;,]" containedin=ALLBUT,Comment
     hi def link semicolonComma Keyword
     
@@ -302,7 +307,23 @@ function SetPythonOptions()
     
 endfunction
 
+autocmd Filetype c call SetCOptions()
+function SetCOptions()
+    " Make f6 do a single file compile and run
+    nnoremap <f6> :!gcc %<CR>:!./a.out<CR>
+    syn match semicolonComma "\v[;,]" containedin=ALLBUT,Comment
+    hi def link semicolonComma Keyword
+    
+    set keywordprg=cppman
+    
+    set foldmethod=syntax
+endfunction
 
+
+augroup filetypedetect
+    au BufRead,BufNewFile *.frag set filetype=glsl
+    au BufRead,BufNewFile *.vert set filetype=glsl
+augroup END
 "}}}
 "{{{Statusline
 set noruler
