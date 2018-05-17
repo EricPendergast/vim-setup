@@ -125,11 +125,11 @@ noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
 
 " Compile using the makefile when F5 is pressed
-map <F5> :wa<CR> :!clear; make<CR>
-map <C-5> :wa<CR> :!clear; make<CR>
-" Run tests when F4 is pressed
-map <F4> :wa<CR> :!clear; make test<CR>
-map <C-4> :wa<CR> :!clear; make test<CR>
+map <F4> :wa<CR> :!clear; make all<CR>
+map <C-4> :wa<CR> :!clear; make all<CR>
+" Run tests when F5 is pressed
+map <F5> :wa<CR> :!clear; make test<CR>
+map <C-5> :wa<CR> :!clear; make test<CR>
 
 " Allows for Ctrl-/ to comment out lines
 inoremap <C-_> <C-o>:call NERDComment(0,"toggle")<C-m>
@@ -138,7 +138,7 @@ nnoremap <C-_> :call NERDComment(0,"toggle")<C-m>
 
 "autocompletes brackets
 inoremap {<CR> {<CR>}<Esc>kox<BS>
-
+    
 " Makes it so that vim doesn't delete tabs created by autoindent on empty
 " lines. This works by typing a character and then deleting it, which forces
 " the autoindenter to put in all the tabs
@@ -196,6 +196,7 @@ nnoremap K 5<C-y>
 nnoremap <Leader>r :SyntasticReset<CR>
 
 nnoremap <C-D> :sh<CR>
+nnoremap <C-O> <C-O>zz
 
 """""""" Window stuff
 " open conque shell vsplit
@@ -286,7 +287,9 @@ autocmd Filetype cpp call SetCppOptions()
 function SetCppOptions()
     " Make f6 do a single file compile and run
     
-    nnoremap <f6> :!g++ -std=c++17 -g3 -Wconversion -Wall -Werror -Wextra -pedantic %<CR>:!./a.out<CR>
+    nnoremap <f6> :!g++ -std=c++17 -g3 -Wconversion -Wall -Wextra -pedantic %<CR>:!./a.out<CR>
+    let g:syntastic_cpp_compiler = "g++"
+    let g:syntastic_cpp_compiler_options = "-std=c++17 -g3 -Wconversion -Wall -Wextra -pedantic"
     syn match semicolonComma "\v[;,]" containedin=ALLBUT,Comment
     hi def link semicolonComma Keyword
     
