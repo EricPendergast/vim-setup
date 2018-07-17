@@ -20,7 +20,6 @@ Plugin 'scrooloose/syntastic'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'ervandew/supertab'
-Plugin 'vim-scripts/Conque-GDB'
 " Colorschemes
 Plugin 'blueshirts/darcula'
 Plugin 'sjl/badwolf'
@@ -31,7 +30,7 @@ Plugin 'lifepillar/vim-solarized8'
 Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tikhomirov/vim-glsl'
-"Plugin 'kana/vim-submode'
+Plugin 'AndrewRadev/undoquit.vim'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -46,6 +45,13 @@ let g:NERDCommentEmptyLines = 1
 " Enable trimming of trailing whitespace when uncommenting
 let g:NERDTrimTrailingWhitespace = 1
 
+let NERDTreeIgnore = ['\.pyc$','\.o$']
+let NERDTreeMinimalUI = 1
+let NERDTreeMapJumpLastChild = '\J'
+let NERDTreeMapJumpFirstChild = '\K'
+let NERDTreeMapJumpNextSibling = '\<C-J>'
+let NERDTreeMapJumpPrevSibling = '\<C-K>'
+
 
 "Youcompleteme fix
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
@@ -56,15 +62,10 @@ let g:syntastic_auto_loc_list = 1
 "let g:syntastic_check_on_open = 1
 "let g:syntastic_check_on_wq = 0
 
-let g:ConqueGdb_Leader = '\'
-let g:ConqueTerm_Color = 2         " 1: strip color after 200 lines, 2: always with color
-let g:ConqueTerm_CloseOnEnd = 1    " close conque when program ends running
-let g:ConqueTerm_StartMessages = 0 " display warning messages if conqueTerm is configured incorrectly
-
-let NERDTreeIgnore = ['\.pyc$']
 
 "Makes ctrlp ignore filetypes in the .gitignore, also makes it open faster
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
+let g:ctrlp_by_filename = 1
 "}}}
 "{{{ Basic Settings
 filetype plugin on 	"enables different vimrc's for different filetypes
@@ -199,12 +200,11 @@ nnoremap <C-D> :sh<CR>
 nnoremap <C-O> <C-O>zz
 
 """""""" Window stuff
-" open conque shell vsplit
-nnoremap <C-W>B :ConqueTermVSplit bash<CR>
-nnoremap <C-W>b :ConqueTermSplit bash<CR><Esc><C-W>J<C-W>500-<C-W>5+:set wfh<CR>i
-nnoremap <C-W><C-b> :ConqueTermSplit bash<CR><Esc><C-W>J<C-W>500-<C-W>5+:set wfh<CR>i
+tnoremap <Esc> <C-W>N
+nnoremap <C-W>b :terminal<CR><C-W>L<C-W>N
+nnoremap <C-W><C-b> :terminal<CR><C-W>L<C-W>N
 
-nnoremap <C-W>D :ConqueGdb<CR><Esc><C-W>J<C-W>500-<C-W>5+:set wfh<CR>i
+"nnoremap <C-W>D :ConqueGdb<CR><Esc><C-W>J<C-W>500-<C-W>5+:set wfh<CR>i
 
 inoremap <C-W>q <esc><C-W>q
 inoremap <C-W><C-Q> <esc><C-W>q
@@ -219,7 +219,7 @@ vnoremap <S-Tab> <gv
 nnoremap <C-Y> <C-I>
 
 " Makes ctrl-f run a project-wide search
-nnoremap <C-F> <c-w>s<c-w>j:call conque_term#open("bash").write('ag --vimgrep ')<CR>
+nnoremap <C-F> :terminal<CR><C-W>Jag --vimgrep 
 
 
 function! SyncTree()
