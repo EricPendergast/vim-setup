@@ -104,6 +104,7 @@ set secure
 set ignorecase
 set smartcase
 set virtualedit=block
+set synmaxcol=200
 
 "}}}
 "{{{ Key Remaps
@@ -332,7 +333,7 @@ augroup END
 set noruler
 set laststatus=2
 " Syntastic settings
-set statusline+=%#warningmsg#
+set statusline=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
