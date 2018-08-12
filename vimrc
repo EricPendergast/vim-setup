@@ -1,43 +1,32 @@
 "{{{ Plugins
-"""" This is for vundle
-set nocompatible              " be iMproved, required
-filetype off                  " required
-
-" set the runtime path to include Vundle and initialize
+"{{{ Vundle setup
+set nocompatible
+filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
 
-" let Vundle manage Vundle, required
+" Let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
-" For searching
 Plugin 'mileszs/ack.vim'
-" Highlights errors
 Plugin 'scrooloose/syntastic'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'ervandew/supertab'
+Plugin 'tpope/vim-fugitive'
+Plugin 'AndrewRadev/undoquit.vim'
 " Colorschemes
 Plugin 'blueshirts/darcula'
 Plugin 'sjl/badwolf'
-Plugin 'dracula/vim'
 Plugin 'altercation/vim-colors-solarized'
-Plugin 'sickill/vim-monokai'
 Plugin 'lifepillar/vim-solarized8'
 Plugin 'NLKNguyen/papercolor-theme'
-Plugin 'tpope/vim-fugitive'
 Plugin 'tikhomirov/vim-glsl'
-Plugin 'AndrewRadev/undoquit.vim'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
-""""
-"""" Plugins
-" Align line-wise comment delimiters flush left instead of following code indentation
-let g:NERDDefaultAlign = 'left'
+"}}}
 
 " Allow commenting and inverting empty lines (useful when commenting a region)
 let g:NERDCommentEmptyLines = 1
@@ -45,6 +34,8 @@ let g:NERDCommentEmptyLines = 1
 " Enable trimming of trailing whitespace when uncommenting
 let g:NERDTrimTrailingWhitespace = 1
 
+" Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDDefaultAlign = 'left'
 let NERDTreeIgnore = ['\.pyc$','\.o$']
 let NERDTreeMinimalUI = 1
 let NERDTreeMapJumpLastChild = '\J'
@@ -52,22 +43,20 @@ let NERDTreeMapJumpFirstChild = '\K'
 let NERDTreeMapJumpNextSibling = '\<C-J>'
 let NERDTreeMapJumpPrevSibling = '\<C-K>'
 
-
 "Youcompleteme fix
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
-
 
 "let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 "let g:syntastic_check_on_open = 1
 "let g:syntastic_check_on_wq = 0
 
-
 "Makes ctrlp ignore filetypes in the .gitignore, also makes it open faster
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
 let g:ctrlp_by_filename = 1
 
 let g:ackprg = 'ag --vimgrep'
+
 cnoreabbrev Ack Ack!
 
 "}}}
@@ -75,8 +64,6 @@ cnoreabbrev Ack Ack!
 filetype plugin on 	"enables different vimrc's for different filetypes
 syntax enable
 
-"colorscheme darcula
-"colorscheme badwolf
 colorscheme PaperColor
 set background=dark
 set shiftwidth=4                " use indents of 4 spaces
@@ -112,7 +99,6 @@ set synmaxcol=200
 
 "}}}
 "{{{ Key Remaps
-" makes <leader> be the space bar
 let mapleader = "\<Space>"
 
 " allows the cursor to move through wrapped lines elegantly
@@ -142,7 +128,7 @@ inoremap <C-_> <C-o>:call NERDComment(0,"toggle")<C-m>
 vnoremap <C-_> :call NERDComment(0,"toggle")<C-m>
 nnoremap <C-_> :call NERDComment(0,"toggle")<C-m>
 
-"autocompletes brackets
+" Autocomplete brackets
 inoremap {<CR> {<CR>}<Esc>kox<BS>
     
 " Makes it so that vim doesn't delete tabs created by autoindent on empty
@@ -170,7 +156,8 @@ inoremap kj <Esc>
 
 command MakeTags :terminal ++close ctags -R .
 
-" so that I can q and wq without worrying if the shift is held
+" So that I can q and wq without worrying if the shift is held
+command W w
 command Wq wq
 command Q q
 command WQ wq
@@ -182,7 +169,7 @@ nnoremap <Leader>t :NERDTreeTabsToggle<CR>
 nnoremap <Leader><Space> :noh<CR>
 nnoremap , za
 
-" makes 'w!!' write even if vim wasn't run as sudo
+" Makes 'w!!' write even if vim wasn't run as sudo
 cmap w!! w !sudo tee > /dev/null %
 
 " Makes <Leader>h switch between .cpp and .h files
@@ -192,24 +179,22 @@ nnoremap <Leader>h :update<CR>:e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,:s
 nnoremap <Tab> gt
 nnoremap <S-Tab> gT
 
-" <Leader>i inserts a single character
-"nnoremap <Leader>i i<Space><Esc>r
-
+" Faster scrolling
 nnoremap J 5<C-e>
 nnoremap K 5<C-y>
 
 " Removes the error list
 nnoremap <Leader>r :SyntasticReset<CR>
 
+" Allows for pressing Ctrl-D for toggling between vim and the terminal
 nnoremap <C-D> :sh<CR>
+
 nnoremap <C-O> <C-O>zz
 
 """""""" Window stuff
 tnoremap <Esc> <C-W>N
 nnoremap <C-W>b :terminal<CR><C-W>L<C-W>N
 nnoremap <C-W><C-b> :terminal<CR><C-W>L<C-W>N
-
-"nnoremap <C-W>D :ConqueGdb<CR><Esc><C-W>J<C-W>500-<C-W>5+:set wfh<CR>i
 
 inoremap <C-W>q <esc><C-W>q
 inoremap <C-W><C-Q> <esc><C-W>q
@@ -221,7 +206,7 @@ vnoremap <S-Tab> <gv
 
 " Since C-I is the same as tab (which is used elsewhere), C-Y is used as a
 " substitute keymapping
-nnoremap <C-Y> <C-I>
+nnoremap <C-Y> <C-I>zz
 
 " Makes ctrl-f run a project-wide search
 nnoremap <C-F> :terminal<CR><C-W>Jag --vimgrep 
@@ -291,10 +276,10 @@ endfunction
 autocmd Filetype cpp call SetCppOptions()
 function SetCppOptions()
     " Make f6 do a single file compile and run
-    
     nnoremap <f6> :!g++ -std=c++17 -g3 -Wconversion -Wall -Wextra -pedantic %<CR>:!./a.out<CR>
     let g:syntastic_cpp_compiler = "g++"
     let g:syntastic_cpp_compiler_options = "-std=c++17 -g3 -Wconversion -Wall -Wextra -pedantic"
+    
     syn match semicolonComma "\v[;,]" containedin=ALLBUT,Comment
     hi def link semicolonComma Keyword
     
