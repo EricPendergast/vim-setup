@@ -58,6 +58,7 @@ let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/
 let g:syntastic_auto_loc_list = 1
 "let g:syntastic_check_on_open = 1
 "let g:syntastic_check_on_wq = 0
+let g:syntastic_mode_map = { 'passive_filetypes': ['python'] }
 
 "Makes ctrlp ignore filetypes in the .gitignore, also makes it open faster
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
