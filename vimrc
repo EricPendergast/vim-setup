@@ -42,9 +42,6 @@ let g:NERDDefaultAlign = 'left'
 " Allow commenting and inverting empty lines (useful when commenting a region)
 let g:NERDCommentEmptyLines = 1
 
-" Enable trimming of trailing whitespace when uncommenting
-let g:NERDTrimTrailingWhitespace = 1
-
 let NERDTreeIgnore = ['\.pyc$','\.o$']
 let NERDTreeMinimalUI = 1
 let NERDTreeMapJumpLastChild = '\J'
@@ -61,7 +58,6 @@ let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/
 let g:syntastic_auto_loc_list = 1
 "let g:syntastic_check_on_open = 1
 "let g:syntastic_check_on_wq = 0
-
 
 "Makes ctrlp ignore filetypes in the .gitignore, also makes it open faster
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
@@ -301,7 +297,7 @@ endfunction
 
 autocmd Filetype python call SetPythonOptions()
 function SetPythonOptions()
-    nnoremap <f6> :!python %<CR>
+    nnoremap <f6> :terminal python3.6 %<CR>
     syn match semicolonComma "\v[;,]"
     hi def link semicolonComma Keyword
     
