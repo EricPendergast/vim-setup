@@ -111,10 +111,6 @@ let mapleader = "\<Space>"
 nnoremap j gj
 nnoremap k gk
 
-"makes Ctrl-S save
-inoremap <C-S> <Esc>:update<CR>
-noremap <C-S> :update<CR>
-vnoremap <C-S> <C-C>:update<CR>
 
 " Allows for moving between window splits with Ctrl-<direction>
 noremap <C-h> <C-w>h
@@ -153,9 +149,6 @@ nmap <Leader>P "+P
 vmap <Leader>p "+p
 vmap <Leader>P "+P
 
-" <Leader>s saves session
-noremap <Leader>s :wa<CR>:mks!<CR>
-
 " Convenient way to exit insert mode
 inoremap jk <Esc>
 inoremap kj <Esc>
@@ -165,13 +158,12 @@ command MakeTags !ctags -R .
 " so that I can q and wq without worrying if the shift is held
 command Wq wq
 command Q q
+command W w
 command WQ wq
 
 " Open nerd tree command
 nnoremap <Leader>t :NERDTreeTabsToggle<CR>
 
-" Makes a double space clear highlight
-nnoremap <Leader><Space> :noh<CR>
 nnoremap , za
 
 " makes 'w!!' write even if vim wasn't run as sudo
@@ -194,46 +186,22 @@ nnoremap K 5<C-y>
 nnoremap <Leader>r :SyntasticReset<CR>
 
 nnoremap <C-D> :sh<CR>
+" Since C-I is the same as tab (which is used elsewhere), C-Y is used as a
+" substitute keymapping
+nnoremap <C-Y> <C-I>zz
 nnoremap <C-O> <C-O>zz
 
 """""""" Window stuff
 tnoremap <Esc> <C-W>N
-nnoremap <C-W>b :terminal<CR><C-W>L<C-W>N
-nnoremap <C-W><C-b> :terminal<CR><C-W>L<C-W>N
-
-"nnoremap <C-W>D :ConqueGdb<CR><Esc><C-W>J<C-W>500-<C-W>5+:set wfh<CR>i
-
-inoremap <C-W>q <esc><C-W>q
-inoremap <C-W><C-Q> <esc><C-W>q
-
-" so that you can press tab in visual mode, and it will indent all highlighted
-" lines
-vnoremap <Tab> >gv
-vnoremap <S-Tab> <gv
-
-" Since C-I is the same as tab (which is used elsewhere), C-Y is used as a
-" substitute keymapping
-nnoremap <C-Y> <C-I>
+nnoremap <C-W>gt :call MoveToNextTab()<CR>
+nnoremap <C-W>gT :call MoveToPrevTab()<CR>
 
 " Makes ctrl-f run a project-wide search
 nnoremap <C-F> :terminal<CR><C-W>Jag --vimgrep 
 
-
-function! SyncTree()
-  if &modifiable
-    NERDTreeFind
-    wincmd p
-  endif
-endfunction
 nnoremap <leader>w :call SyncTree()<CR>
 
-
-function! ExecuteMacroOverVisualRange()
-  echo "@".getcmdline()
-  execute ":'<,'>normal @".nr2char(getchar())
-endfunction
 xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
-
 
 "}}}
 "{{{ Other
@@ -343,6 +311,92 @@ set statusline+=%m
 "set statusline+=%=%LL
 "  The length of the current line
 set statusline+=%=
-set statusline+=\ [%02{strwidth(getline('.'))}]
+"set statusline+=\ [%02{strwidth(getline('.'))}]
 set statusline+=\ %3p%%\ 
+
+"}}}
+"{{{Functions
+function! ExecuteMacroOverVisualRange()
+  echo "@".getcmdline()
+  execute ":'<,'>normal @".nr2char(getchar())
+endfunction
+
+function! SyncTree()
+  if &modifiable
+    NERDTreeFind
+    wincmd p
+  endif
+endfunction
+
+function MoveToPrevTab()
+  "there is only one window
+  if tabpagenr('$') == 1 && winnr('$') == 1
+    return
+  endif
+  "preparing new window
+  let l:tab_nr = tabpagenr('$')
+  let l:cur_buf = bufnr('%')
+  if tabpagenr() != 1
+    close!
+    if l:tab_nr == tabpagenr('$')
+      tabprev
+    endif
+    sp
+  else
+    close!
+    exe "0tabnew"
+  endif
+  "opening current buffer in new window
+  exe "b".l:cur_buf
+endfunc
+
+function MoveToNextTab()
+  "there is only one window
+  if tabpagenr('$') == 1 && winnr('$') == 1
+    return
+  endif
+  "preparing new window
+  let l:tab_nr = tabpagenr('$')
+  let l:cur_buf = bufnr('%')
+  if tabpagenr() < tab_nr
+    close!
+    if l:tab_nr == tabpagenr('$')
+      tabnext
+    endif
+    sp
+  else
+    close!
+    tabnew
+  endif
+  "opening current buffer in new window
+  exe "b".l:cur_buf
+endfunc
+"}}}
+"{{{ Unused shortcuts
+" <Leader>s saves session
+"noremap <Leader>s :wa<CR>:mks!<CR>
+
+" Makes a double space clear highlight
+"nnoremap <Leader><Space> :noh<CR>
+
+" so that you can press tab in visual mode, and it will indent all highlighted
+" lines
+"vnoremap <Tab> >gv
+"vnoremap <S-Tab> <gv
+
+"makes Ctrl-S save
+"inoremap <C-S> <Esc>:update<CR>
+"noremap <C-S> :update<CR>
+"vnoremap <C-S> <C-C>:update<CR>
+
+"nnoremap <C-W>b :terminal<CR><C-W>L<C-W>N
+"nnoremap <C-W><C-b> :terminal<CR><C-W>L<C-W>N
+
+"nnoremap <C-W>D :ConqueGdb<CR><Esc><C-W>J<C-W>500-<C-W>5+:set wfh<CR>i
+
+"inoremap <C-W>q <esc><C-W>q
+"inoremap <C-W><C-Q> <esc><C-W>q
+
+" Fugitive statusline
+"set statusline=%<%f\ %h%m%r%{FugitiveStatusline()}%=%-14.(%l,%c%V%)\ %P
 "}}}
