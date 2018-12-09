@@ -151,7 +151,6 @@ command MakeTags :terminal ++close ctags -R .
 command W w
 command Wq wq
 command Q q
-command W w
 command WQ wq
 
 " Open nerd tree command
