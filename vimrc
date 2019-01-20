@@ -15,6 +15,7 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'ervandew/supertab'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-unimpaired'
 Plugin 'AndrewRadev/undoquit.vim'
 " Colorschemes
 Plugin 'blueshirts/darcula'
@@ -71,7 +72,6 @@ set softtabstop=4               " let backspace delete indent
 
 set number 			" show line numbers
 set noshowmatch 		" shows the match for ({[]})
-"let g:loaded_matchparen=1 "disables highlighting of matching parenthesis
 set incsearch 		" search as characters are entered
 set hlsearch 		" highlight matches
 set autoindent
@@ -80,15 +80,11 @@ set mouse=nv 		"allows use of mouse in normal and visual mode (not insert mode)
 set wildmenu		"shows a visual menu for tab completion
 set lazyredraw      "speeds up macros by not redrawing the screen during them
 "set termguicolors   "lets the terminal use truecolor (16 million colors)
-"set scrolloff=3		"leaves 3 lines between cursor and end of screen
 set foldenable
 set foldmethod=marker
 set foldlevel=500
 set foldnestmax=1
 set cursorline      "Shows a visual horizontal line where the cursor is
-" Allows for project specific vimrc's
-set exrc
-set secure
 
 set ignorecase
 set smartcase
@@ -123,15 +119,8 @@ vnoremap <C-_> :call NERDComment(0,"toggle")<C-m>
 nnoremap <C-_> :call NERDComment(0,"toggle")<C-m>
 
 " Autocomplete brackets
-inoremap {<CR> {<CR>}<Esc>kox<BS>
+inoremap {<CR> {<CR>}<Esc>ko
     
-" Makes it so that vim doesn't delete tabs created by autoindent on empty
-" lines. This works by typing a character and then deleting it, which forces
-" the autoindenter to put in all the tabs
-inoremap <CR> <CR>x<BS>
-nnoremap o ox<BS>
-nnoremap O Ox<BS>
-nnoremap S Sx<BS>
 
 " Copying and pasting from the system clipboard
 vmap <Leader>y "+y
@@ -164,32 +153,35 @@ cmap w!! w !sudo tee > /dev/null %
 " Makes <Leader>h switch between .cpp and .h files
 nnoremap <Leader>h :update<CR>:e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,:s,.frag$,.X123X,:s,.vert$,.frag,:s,.X123X$,.vert,<CR>
 
-" Makes tab and shft tab go to next and previos tab, respectively
-nnoremap <Tab> gt
-nnoremap <S-Tab> gT
-
 " Faster scrolling
-nnoremap J 5<C-e>
-nnoremap K 5<C-y>
+nnoremap ) 5<C-e>
+nnoremap ( 5<C-y>
+" For training
+nnoremap J <nop>
+nnoremap K <nop>
+
+" Unmap these because these shortcuts are scary
+nnoremap ZZ <nop>
+nnoremap ZQ <nop>
 
 " Removes the error list
 nnoremap <Leader>r :SyntasticReset<CR>
 
 " Allows for pressing Ctrl-D for toggling between vim and the terminal
 nnoremap <C-D> :sh<CR>
+
 " Since C-I is the same as tab (which is used elsewhere), C-Y is used as a
 " substitute keymapping
 nnoremap <C-Y> <C-I>zz
 nnoremap <C-O> <C-O>zz
+nnoremap <C-]> <C-]>zz
+nnoremap <C-T> <C-T>zz
 
 """""""" Window stuff
 tnoremap <Esc> <C-W>N
 
 nnoremap <C-W>gt :call MoveToNextTab()<CR>
 nnoremap <C-W>gT :call MoveToPrevTab()<CR>
-
-" Makes ctrl-f run a project-wide search
-nnoremap <C-F> :terminal<CR><C-W>Jag --vimgrep 
 
 nnoremap <leader>w :call SyncTree()<CR>
 
@@ -211,7 +203,6 @@ endif
 
 " Automatically loads a template when creating a new file
 au BufNewFile * silent! 0r ~/.vim/skeleton/template.%:e
-
 
 " Put plugins and dictionaries in this dir (also on Windows)
 let vimDir = '$HOME/.vim'
@@ -391,4 +382,23 @@ endfunc
 
 " Fugitive statusline
 "set statusline=%<%f\ %h%m%r%{FugitiveStatusline()}%=%-14.(%l,%c%V%)\ %P
+
+" Makes tab and shft tab go to next and previos tab, respectively
+"nnoremap <Tab> gt
+"nnoremap <S-Tab> gT
+
+
+" Makes ctrl-f run a project-wide search
+" nnoremap <C-F> :terminal<CR><C-W>Jag --vimgrep 
+
+" Makes it so that vim doesn't delete tabs created by autoindent on empty
+" lines. This works by typing a character and then deleting it, which forces
+" the autoindenter to put in all the tabs
+"inoremap <CR> <CR>x<BS>
+"nnoremap o ox<BS>
+"nnoremap O Ox<BS>
+"nnoremap S Sx<BS>
+"inoremap {<CR> {<CR>}<Esc>kox<BS>
+
+"set scrolloff=3		"leaves 3 lines between cursor and end of screen
 "}}}
