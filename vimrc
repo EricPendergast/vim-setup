@@ -354,6 +354,16 @@ function MoveToNextTab()
   "opening current buffer in new window
   exe "b".l:cur_buf
 endfunc
+
+function RunCommandInExistingShell(command_text)
+    if !bufexists("!/bin/bash")
+        call feedkeys(":terminal\<CR>")
+    endif
+
+    call feedkeys("\<C-W>s\<C-W>:buffer \!/bin/bash\<CR>ii\<C-U>" . a:command_text . "\<CR>\<Esc>:q\<CR>")
+
+endfunc
+
 "}}}
 "{{{ Unused shortcuts
 " <Leader>s saves session
