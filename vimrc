@@ -192,7 +192,9 @@ nnoremap <C-D> :sh<CR>
 nnoremap <C-O> <C-O>zz
 
 """""""" Window stuff
-tnoremap <Esc> <C-W>N
+if has("terminal")
+    tnoremap <Esc> <C-W>N
+endif
 nnoremap <C-W>b :terminal<CR><C-W>L<C-W>N
 nnoremap <C-W><C-b> :terminal<CR><C-W>L<C-W>N
 
