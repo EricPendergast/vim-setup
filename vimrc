@@ -24,6 +24,7 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'lifepillar/vim-solarized8'
 Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'tikhomirov/vim-glsl'
+Plugin 'vim-scripts/Conque-GDB'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -55,6 +56,9 @@ let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-stand
 let g:ctrlp_by_filename = 1
 
 let g:ackprg = 'ag --vimgrep'
+
+let g:ConqueGdb_Leader = '\'
+nnoremap \d :ConqueGdbCommand delete<CR>
 
 cnoreabbrev Ack Ack!
 
@@ -134,7 +138,12 @@ vmap <Leader>P "+P
 inoremap jk <Esc>
 inoremap kj <Esc>
 
-command MakeTags :terminal ++close ctags -R .
+
+if has("terminal")
+    command MakeTags :terminal ++close ctags -R .
+else
+    command MakeTags :!ctags -R .
+endif
 
 " So that I can q and wq without worrying if the shift is held
 command W w
@@ -358,12 +367,26 @@ function MoveToNextTab()
 endfunc
 
 function RunCommandInExistingShell(command_text)
-    if !bufexists("!/bin/bash")
-        call feedkeys(":terminal\<CR>")
+    let open_terminal_cmd = ""
+    let terminal_buffer = ""
+    if has("terminal")
+        let open_terminal_cmd = ":terminal\<CR>"
+        let terminal_buffer = "!/bin/bash"
+        let terminal_buffer_escaped = "\!/bin/bash"
+    else
+        let open_terminal_cmd = ":ConqueTermSplit bash\<CR>"
+        let terminal_buffer = "bash - 1"
+        let terminal_buffer_escaped = "bash\ -\ 1"
     endif
 
-    call feedkeys("\<C-W>s\<C-W>:buffer \!/bin/bash\<CR>ii\<C-U>" . a:command_text . "\<CR>\<Esc>:q\<CR>")
+    if !bufexists(terminal_buffer)
+        call feedkeys(open_terminal_cmd . "\<Esc>:q\<CR>")
+    endif
 
+    call feedkeys("\<C-W>s\<Esc>:buffer " . terminal_buffer_escaped . "\<CR>ii\<C-U>" . a:command_text . "\<CR>\<Esc>:q\<CR>")
+
+    "call feedkeys(":windo if expand('%')=='" . terminal_buffer . "'| throw 'stop' | call feedkeys('') | endif\<CR>")
+    "call feedkeys(":windo if expand('%')=='bash - 1'| call feedkeys('i') | throw 'error' |  endif\<CR>")
 endfunc
 
 "}}}
