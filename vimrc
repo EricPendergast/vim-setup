@@ -24,7 +24,9 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'lifepillar/vim-solarized8'
 Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'tikhomirov/vim-glsl'
-Plugin 'vim-scripts/Conque-GDB'
+if !has("terminal")
+    Plugin 'vim-scripts/Conque-GDB'
+endif
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -57,10 +59,18 @@ let g:ctrlp_by_filename = 1
 
 let g:ackprg = 'ag --vimgrep'
 
-let g:ConqueGdb_Leader = '\'
-nnoremap \d :ConqueGdbCommand delete<CR>
-
-cnoreabbrev Ack Ack!
+if has("terminal")
+    packadd termdebug
+    nnoremap \b :Break<CR>
+    nnoremap \c :Clear<CR>
+    nnoremap \p :Evaluate<CR>
+    nnoremap \s :Step<CR>
+    nnoremap \n :Over<CR>
+    nnoremap \d :call term_sendkeys("!gdb", "delete\<lt>CR>y\<lt>CR>")<CR>
+else
+    let g:ConqueGdb_Leader = '\'
+    nnoremap \d :ConqueGdbCommand delete<CR>
+endif
 
 "}}}
 "{{{ Basic Settings
@@ -139,11 +149,8 @@ inoremap jk <Esc>
 inoremap kj <Esc>
 
 
-if has("terminal")
-    command MakeTags :terminal ++close ctags -R .
-else
-    command MakeTags :!ctags -R .
-endif
+
+command MakeTags :!ctags -R .
 
 " So that I can q and wq without worrying if the shift is held
 command W w
@@ -160,7 +167,7 @@ nnoremap , za
 cmap w!! w !sudo tee > /dev/null %
 
 " Makes <Leader>h switch between .cpp and .h files
-nnoremap <Leader>h :update<CR>:e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,:s,.frag$,.X123X,:s,.vert$,.frag,:s,.X123X$,.vert,<CR>
+nnoremap <Leader>h :update<CR>:e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,:s,.frag$,.X123X,:s,.vert$,.frag,:s,.X123X$,.vert,<CR><space>
 
 " Faster scrolling
 nnoremap ) 5<C-e>
@@ -189,7 +196,15 @@ nnoremap <C-T> <C-T>zz
 """""""" Window stuff
 if has("terminal")
     tnoremap <Esc> <C-W>N
+    tnoremap <C-J> <C-W><C-J>
+    tnoremap <C-K> <C-W><C-K>
+    tnoremap <C-L> <C-W><C-L>
+    nnoremap <C-W>d :Termdebug<CR>
+else
+    nnoremap <C-W>d :ConqueGdb bash<CR>
 endif
+
+
 
 nnoremap <C-W>gt :call MoveToNextTab()<CR>
 nnoremap <C-W>gT :call MoveToPrevTab()<CR>
@@ -197,6 +212,8 @@ nnoremap <C-W>gT :call MoveToPrevTab()<CR>
 nnoremap <leader>w :call SyncTree()<CR>
 
 xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+
+command! AddIncludeGuards :normal! mmggO#ifndef <Esc>:put =expand('%{@%}')<CR>:s/\V\/\|./_/g<CR>VUo<Esc>kyypkkJo#define <Esc>JGo<CR>#endif<Esc>'mzz
 
 "}}}
 "{{{ Other
@@ -367,24 +384,23 @@ function MoveToNextTab()
 endfunc
 
 function RunCommandInExistingShell(command_text)
-    let open_terminal_cmd = ""
-    let terminal_buffer = ""
     if has("terminal")
-        let open_terminal_cmd = ":terminal\<CR>"
-        let terminal_buffer = "!/bin/bash"
         let terminal_buffer_escaped = "\!/bin/bash"
+        if bufwinnr(terminal_buffer_escaped) == -1
+            normal :terminal
+        endif
+        call term_sendkeys("\!/bin/bash", a:command_text)
     else
         let open_terminal_cmd = ":ConqueTermSplit bash\<CR>"
         let terminal_buffer = "bash - 1"
         let terminal_buffer_escaped = "bash\ -\ 1"
+
+        if !bufexists("bash - 1")
+            call feedkeys(open_terminal_cmd . "\<Esc>:q\<CR>")
+        endif
+
+        call feedkeys("\<C-W>s\<Esc>:buffer " . terminal_buffer_escaped . "\<CR>ii\<C-U>" . a:command_text . "\<CR>\<Esc>:q\<CR>")
     endif
-
-    if !bufexists(terminal_buffer)
-        call feedkeys(open_terminal_cmd . "\<Esc>:q\<CR>")
-    endif
-
-    call feedkeys("\<C-W>s\<Esc>:buffer " . terminal_buffer_escaped . "\<CR>ii\<C-U>" . a:command_text . "\<CR>\<Esc>:q\<CR>")
-
     "call feedkeys(":windo if expand('%')=='" . terminal_buffer . "'| throw 'stop' | call feedkeys('') | endif\<CR>")
     "call feedkeys(":windo if expand('%')=='bash - 1'| call feedkeys('i') | throw 'error' |  endif\<CR>")
 endfunc
