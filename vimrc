@@ -10,7 +10,7 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'mileszs/ack.vim'
-Plugin 'scrooloose/syntastic'
+"Plugin 'scrooloose/syntastic'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'ervandew/supertab'
@@ -24,6 +24,10 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'lifepillar/vim-solarized8'
 Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'tikhomirov/vim-glsl'
+Plugin 'w0rp/ale'
+Plugin 'm-pilia/vim-ccls'
+Plugin 'skywind3000/vim-preview'
+
 if !has("terminal")
     Plugin 'vim-scripts/Conque-GDB'
 endif
@@ -52,12 +56,19 @@ let g:syntastic_auto_loc_list = 1
 "let g:syntastic_check_on_open = 1
 "let g:syntastic_check_on_wq = 0
 let g:syntastic_mode_map = { 'passive_filetypes': ['python'] }
+let g:syntastic_cpp_check_header = 1
 
 "Makes ctrlp ignore filetypes in the .gitignore, also makes it open faster
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
 let g:ctrlp_by_filename = 1
 
 let g:ackprg = 'ag --vimgrep'
+
+let g:ale_cpp_clangtidy_checks = ['*', '-cppcoreguidelines-pro-bounds-pointer-arithmetic']
+let g:ale_enabled = 0
+nnoremap <C-]> :ALEGoToDefinition<CR>
+nnoremap <C-W><C-]> :ALEGoToDefinitionInSplit<CR>
+nnoremap <C-W>] :ALEGoToDefinitionInSplit<CR>
 
 if has("terminal")
     packadd termdebug
@@ -103,7 +114,7 @@ set cursorline      "Shows a visual horizontal line where the cursor is
 set ignorecase
 set smartcase
 set virtualedit=block
-set synmaxcol=200
+set synmaxcol=1000
 
 "}}}
 "{{{ Key Remaps
@@ -158,6 +169,8 @@ command Wq wq
 command Q q
 command WQ wq
 
+command DeleteHiddenBuffers call DeleteHiddenBuffers()
+
 " Open nerd tree command
 nnoremap <Leader>t :NERDTreeTabsToggle<CR>
 
@@ -172,39 +185,42 @@ nnoremap <Leader>h :update<CR>:e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,:s
 " Faster scrolling
 nnoremap ) 5<C-e>
 nnoremap ( 5<C-y>
-" For training
-nnoremap J <nop>
-nnoremap K <nop>
 
 " Unmap these because these shortcuts are scary
 nnoremap ZZ <nop>
 nnoremap ZQ <nop>
 
 " Removes the error list
-nnoremap <Leader>r :SyntasticReset<CR>
+"nnoremap <Leader>r :SyntasticReset<CR>
+nnoremap <Leader>r :ALEToggle<CR>
+
+nnoremap <Leader><Leader>r :redraw!<CR>
 
 " Allows for pressing Ctrl-D for toggling between vim and the terminal
 nnoremap <C-D> :sh<CR>
 
-" Since C-I is the same as tab (which is used elsewhere), C-Y is used as a
-" substitute keymapping
-nnoremap <C-Y> <C-I>zz
+nnoremap <C-I> <C-I>zz
 nnoremap <C-O> <C-O>zz
-nnoremap <C-]> <C-]>zz
+"nnoremap <C-]> <C-]>zz
 nnoremap <C-T> <C-T>zz
 
 """""""" Window stuff
 if has("terminal")
-    tnoremap <Esc> <C-W>N
+    tnoremap <C-W>gt <C-W>:tabn<CR>
+    tnoremap <C-W>gT <C-W>:tabp<CR>
     tnoremap <C-J> <C-W><C-J>
     tnoremap <C-K> <C-W><C-K>
     tnoremap <C-L> <C-W><C-L>
+    tnoremap <C-W><C-J> <C-J>
+    tnoremap <C-W><C-K> <C-K>
+    tnoremap <C-W><C-L> <C-L>
+	tnoremap <C-W>( <C-W>N5<C-Y>
+	tnoremap <C-W>) <C-W>N5<C-E>
     nnoremap <C-W>d :Termdebug<CR>
+	autocmd TerminalOpen * setlocal nonumber
 else
     nnoremap <C-W>d :ConqueGdb bash<CR>
 endif
-
-
 
 nnoremap <C-W>gt :call MoveToNextTab()<CR>
 nnoremap <C-W>gT :call MoveToPrevTab()<CR>
@@ -308,9 +324,9 @@ augroup END
 set noruler
 set laststatus=2
 " Syntastic settings
-set statusline=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+"set statusline=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
 
 "set statusline+=%t
 "File path relative to current working directory
@@ -404,6 +420,14 @@ function RunCommandInExistingShell(command_text)
     "call feedkeys(":windo if expand('%')=='" . terminal_buffer . "'| throw 'stop' | call feedkeys('') | endif\<CR>")
     "call feedkeys(":windo if expand('%')=='bash - 1'| call feedkeys('i') | throw 'error' |  endif\<CR>")
 endfunc
+
+function DeleteHiddenBuffers()
+    let tpbl=[]
+    call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
+    for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
+        silent execute 'bwipeout' buf
+    endfor
+endfunction
 
 "}}}
 "{{{ Unused shortcuts
