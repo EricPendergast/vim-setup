@@ -9,6 +9,7 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'tpope/vim-vinegar'
 Plugin 'mileszs/ack.vim'
 "Plugin 'scrooloose/syntastic'
 Plugin 'ctrlpvim/ctrlp.vim'
@@ -40,6 +41,7 @@ filetype plugin indent on    " required
 let g:NERDCommentEmptyLines = 1
 " Align line-wise comment delimiters flush left instead of following code indentation
 let g:NERDDefaultAlign = 'left'
+let g:NERDTreeHijackNetrw = 0
 
 let NERDTreeIgnore = ['\.pyc$','\.o$']
 let NERDTreeMinimalUI = 1
@@ -176,15 +178,16 @@ nnoremap <Leader>t :NERDTreeTabsToggle<CR>
 
 nnoremap , za
 
-" Makes 'w!!' write even if vim wasn't run as sudo
-cmap w!! w !sudo tee > /dev/null %
+command SudoWrite w !sudo tee > /dev/null %
 
 " Makes <Leader>h switch between .cpp and .h files
-nnoremap <Leader>h :update<CR>:e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,:s,.frag$,.X123X,:s,.vert$,.frag,:s,.X123X$,.vert,<CR><space>
+nnoremap <Leader>h :update<CR>:e %:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,:s,.frag$,.X123X,:s,.vert$,.frag,:s,.X123X$,.vert,<CR><space>
 
 " Faster scrolling
 nnoremap ) 5<C-e>
 nnoremap ( 5<C-y>
+vnoremap ) 5<C-e>
+vnoremap ( 5<C-y>
 
 " Unmap these because these shortcuts are scary
 nnoremap ZZ <nop>
