@@ -28,6 +28,7 @@ Plugin 'tikhomirov/vim-glsl'
 Plugin 'w0rp/ale'
 Plugin 'm-pilia/vim-ccls'
 Plugin 'skywind3000/vim-preview'
+Plugin 'gcmt/taboo.vim'
 
 if !has("terminal")
     Plugin 'vim-scripts/Conque-GDB'
@@ -111,7 +112,7 @@ set foldenable
 set foldmethod=marker
 set foldlevel=500
 set foldnestmax=1
-set cursorline      "Shows a visual horizontal line where the cursor is
+"set cursorline      "Shows a visual horizontal line where the cursor is
 
 set ignorecase
 set smartcase
@@ -334,14 +335,15 @@ set laststatus=2
 
 "set statusline+=%t
 "File path relative to current working directory
-set statusline+=%{@%}
+set statusline=%{@%}
 set statusline+=%m
 " The file encoding
 "set statusline+=[%{&ff}]
-" The number of lines in the file
-"set statusline+=%=%LL
-"  The length of the current line
 set statusline+=%=
+" The number of lines in the file
+set statusline+=%l/
+set statusline+=%L
+"  The length of the current line
 "set statusline+=\ [%02{strwidth(getline('.'))}]
 set statusline+=\ %3p%%\ 
 
