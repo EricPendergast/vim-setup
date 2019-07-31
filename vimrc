@@ -97,7 +97,7 @@ set expandtab                   " tabs are spaces, not tabs
 set tabstop=4                   " an indentation every four columns
 set softtabstop=4               " let backspace delete indent
 
-set number 			" show line numbers
+set nonumber 			" don't show line numbers
 set noshowmatch 		" shows the match for ({[]})
 set incsearch 		" search as characters are entered
 set hlsearch 		" highlight matches
@@ -157,6 +157,7 @@ nmap <Leader>P "+P
 vmap <Leader>p "+p
 vmap <Leader>P "+P
 
+nnoremap <Leader><Leader>p :call PrintRegisterForCopying()<CR>
 " Convenient way to exit insert mode
 inoremap jk <Esc>
 inoremap kj <Esc>
@@ -346,6 +347,18 @@ set statusline+=\ %3p%%\
 
 "}}}
 "{{{Functions
+
+function PrintRegisterForCopying()
+	silent execute "!clear"
+	silent execute "!clear"
+	echo "@".getcmdline()
+	execute "call EchoStr(@".nr2char(getchar()).")"
+endfunction
+
+function EchoStr(str)
+	execute "!echo " . shellescape(a:str, 1)
+endfunction
+
 function! ExecuteMacroOverVisualRange()
   echo "@".getcmdline()
   execute ":'<,'>normal @".nr2char(getchar())
