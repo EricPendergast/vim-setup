@@ -8,7 +8,6 @@ call vundle#begin()
 " Let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'scrooloose/nerdtree'
-Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'tpope/vim-vinegar'
 Plugin 'mileszs/ack.vim'
 "Plugin 'scrooloose/syntastic'
@@ -46,10 +45,9 @@ let g:NERDTreeHijackNetrw = 0
 
 let NERDTreeIgnore = ['\.pyc$','\.o$']
 let NERDTreeMinimalUI = 1
-let NERDTreeMapJumpLastChild = '\J'
-let NERDTreeMapJumpFirstChild = '\K'
 let NERDTreeMapJumpNextSibling = '\<C-J>'
 let NERDTreeMapJumpPrevSibling = '\<C-K>'
+let g:NERDTreeQuitOnOpen = 1
 
 "Youcompleteme fix
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
@@ -69,6 +67,9 @@ let g:ackprg = 'ag --vimgrep'
 
 let g:ale_cpp_clangtidy_checks = ['*', '-cppcoreguidelines-pro-bounds-pointer-arithmetic']
 let g:ale_enabled = 0
+
+set sessionoptions=blank,curdir,folds,help,tabpages,terminal,winsize,globals
+
 nnoremap <C-]> :ALEGoToDefinition<CR>
 nnoremap <C-W><C-]> :ALEGoToDefinitionInSplit<CR>
 nnoremap <C-W>] :ALEGoToDefinitionInSplit<CR>
@@ -176,7 +177,7 @@ command WQ wq
 command DeleteHiddenBuffers call DeleteHiddenBuffers()
 
 " Open nerd tree command
-nnoremap <Leader>t :NERDTreeTabsToggle<CR>
+nnoremap <Leader>t :NERDTreeToggle<CR>
 
 nnoremap , za
 
