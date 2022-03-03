@@ -69,6 +69,7 @@ let g:syntastic_cpp_check_header = 1
 "Makes ctrlp ignore filetypes in the .gitignore, also makes it open faster
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
 let g:ctrlp_by_filename = 1
+let g:ctrlp_switch_buffer = 0
 
 let g:ackprg = 'ag --vimgrep'
 
@@ -176,6 +177,8 @@ vmap <Leader>P "+P
 
 " If vim lacks proper clipboard support, this is very useful.
 nnoremap <Leader><Leader>p :call PrintRegisterForCopying()<CR>
+" Copies the file name and line number into the clipboard
+nnoremap <Leader><Leader>gF :let @"=join([expand('%'),  line(".")], ':')<CR>
 " Convenient way to exit insert mode
 "inoremap jk <Esc>
 "inoremap kj <Esc>
