@@ -13,7 +13,8 @@ Plugin 'mileszs/ack.vim'
 "Plugin 'scrooloose/syntastic'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'ervandew/supertab'
+"Plugin 'ervandew/supertab'
+Plugin 'ycm-core/YouCompleteMe'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'AndrewRadev/undoquit.vim'
@@ -23,11 +24,17 @@ Plugin 'sjl/badwolf'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'lifepillar/vim-solarized8'
 Plugin 'NLKNguyen/papercolor-theme'
-Plugin 'tikhomirov/vim-glsl'
-Plugin 'w0rp/ale'
+"Plugin 'tikhomirov/vim-glsl'
+Plugin 'vim-scripts/ShaderHighLight'
+"Plugin 'w0rp/ale'
 Plugin 'm-pilia/vim-ccls'
 Plugin 'skywind3000/vim-preview'
 Plugin 'gcmt/taboo.vim'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+Plugin 'tommcdo/vim-exchange'
+"Plugin 'OmniSharp/omnisharp-vim'
+"Plugin 'OrangeT/vim-csharp'
 
 if !has("terminal")
     Plugin 'vim-scripts/Conque-GDB'
@@ -50,7 +57,7 @@ let NERDTreeMapJumpPrevSibling = '\<C-K>'
 let g:NERDTreeQuitOnOpen = 1
 
 "Youcompleteme fix
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+"let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py'
 
 "let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -65,14 +72,21 @@ let g:ctrlp_by_filename = 1
 
 let g:ackprg = 'ag --vimgrep'
 
-let g:ale_cpp_clangtidy_checks = ['*', '-cppcoreguidelines-pro-bounds-pointer-arithmetic']
-let g:ale_enabled = 0
+"let g:ale_cpp_clangtidy_checks = ['*', '-cppcoreguidelines-pro-bounds-pointer-arithmetic']
+"let g:ale_enabled = 1
 
-set sessionoptions=blank,curdir,folds,help,tabpages,terminal,winsize,globals
+"let g:OmniSharp_server_stdio = 1
+"let g:OmniSharp_highlighting = 0
 
-nnoremap <C-]> :ALEGoToDefinition<CR>
-nnoremap <C-W><C-]> :ALEGoToDefinitionInSplit<CR>
-nnoremap <C-W>] :ALEGoToDefinitionInSplit<CR>
+let g:UltiSnipsExpandTrigger="<c-e>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+
+set sessionoptions=blank,curdir,folds,help,tabpages,terminal,winsize
+
+"nnoremap <C-]> :ALEGoToDefinition<CR>
+"nnoremap <C-W><C-]> :ALEGoToDefinitionInSplit<CR>
+"nnoremap <C-W>] :ALEGoToDefinitionInSplit<CR>
 
 if has("terminal")
     packadd termdebug
@@ -110,7 +124,8 @@ set wildmenu		"shows a visual menu for tab completion
 set lazyredraw      "speeds up macros by not redrawing the screen during them
 "set termguicolors   "lets the terminal use truecolor (16 million colors)
 set foldenable
-set foldmethod=marker
+set foldmethod=indent
+"set foldmethod=marker
 set foldlevel=500
 set foldnestmax=1
 "set cursorline      "Shows a visual horizontal line where the cursor is
@@ -143,9 +158,9 @@ map <F5> :wa<CR> :!clear; make test<CR>
 map <C-5> :wa<CR> :!clear; make test<CR>
 
 " Allows for Ctrl-/ to comment out lines
-inoremap <C-_> <C-o>:call NERDComment(0,"toggle")<C-m>
-vnoremap <C-_> :call NERDComment(0,"toggle")<C-m>
-nnoremap <C-_> :call NERDComment(0,"toggle")<C-m>
+inoremap <C-_> <C-o>:call nerdcommenter#Comment(0,"toggle")<C-m>
+vnoremap <C-_> :call nerdcommenter#Comment(0,"toggle")<C-m>
+nnoremap <C-_> :call nerdcommenter#Comment(0,"toggle")<C-m>
 
 " Autocomplete brackets
 inoremap {<CR> {<CR>}<Esc>ko
@@ -159,10 +174,11 @@ nmap <Leader>P "+P
 vmap <Leader>p "+p
 vmap <Leader>P "+P
 
+" If vim lacks proper clipboard support, this is very useful.
 nnoremap <Leader><Leader>p :call PrintRegisterForCopying()<CR>
 " Convenient way to exit insert mode
-inoremap jk <Esc>
-inoremap kj <Esc>
+"inoremap jk <Esc>
+"inoremap kj <Esc>
 
 
 
@@ -270,57 +286,6 @@ endif
 
 "}}}
 "{{{ Filetypes
-autocmd Filetype java call SetJavaOptions()
-function SetJavaOptions()
-    " This is because I like semicolons and commas to be highlighted a
-    " different color. I made the highlight color be that of keywords because
-    " most colorschemes have brightly colored keywords
-    syn match semicolonComma "\v[;,]" containedin=ALLBUT,Comment
-    hi def link semicolonComma Keyword
-    
-    set foldmethod=syntax
-endfunction
-
-autocmd Filetype cpp call SetCppOptions()
-function SetCppOptions()
-    " Make f6 do a single file compile and run
-    nnoremap <f6> :!g++ -std=c++17 -g3 -Wconversion -Wall -Wextra -pedantic %<CR>:!./a.out<CR>
-    let g:syntastic_cpp_compiler = "g++"
-    let g:syntastic_cpp_compiler_options = "-std=c++17 -g3 -Wconversion -Wall -Wextra -pedantic"
-    
-    syn match semicolonComma "\v[;,]" containedin=ALLBUT,Comment
-    hi def link semicolonComma Keyword
-    
-    set keywordprg=cppman
-    
-    set foldmethod=syntax
-endfunction
-
-
-autocmd Filetype python call SetPythonOptions()
-function SetPythonOptions()
-    nnoremap <f6> :terminal python3.6 %<CR>
-    syn match semicolonComma "\v[;,]"
-    hi def link semicolonComma Keyword
-    
-    set foldmethod=indent
-    set foldnestmax=2
-    
-endfunction
-
-autocmd Filetype c call SetCOptions()
-function SetCOptions()
-    " Make f6 do a single file compile and run
-    nnoremap <f6> :!gcc %<CR>:!./a.out<CR>
-    syn match semicolonComma "\v[;,]" containedin=ALLBUT,Comment
-    hi def link semicolonComma Keyword
-    
-    set keywordprg=cppman
-    
-    set foldmethod=syntax
-endfunction
-
-
 augroup filetypedetect
     au BufRead,BufNewFile *.frag set filetype=glsl
     au BufRead,BufNewFile *.vert set filetype=glsl
