@@ -7,14 +7,43 @@ call vundle#begin()
 
 " Let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
+
 Plugin 'scrooloose/nerdtree'
+let g:NERDTreeHijackNetrw = 0
+let NERDTreeIgnore = ['\.pyc$','\.o$']
+let NERDTreeMinimalUI = 1
+let NERDTreeMapJumpNextSibling = '\<C-J>'
+let NERDTreeMapJumpPrevSibling = '\<C-K>'
+let g:NERDTreeQuitOnOpen = 1
+
 Plugin 'tpope/vim-vinegar'
 Plugin 'mileszs/ack.vim'
+let g:ackprg = 'ag --vimgrep'
 "Plugin 'scrooloose/syntastic'
+"let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+let g:syntastic_mode_map = { 'passive_filetypes': ['python'] }
+let g:syntastic_cpp_check_header = 1
+
 Plugin 'ctrlpvim/ctrlp.vim'
+"Makes ctrlp ignore filetypes in the .gitignore, also makes it open faster
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
+let g:ctrlp_by_filename = 1
+let g:ctrlp_switch_buffer = 0
+
 Plugin 'scrooloose/nerdcommenter'
+" Allow commenting and inverting empty lines (useful when commenting a region)
+let g:NERDCommentEmptyLines = 1
+" Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDDefaultAlign = 'left'
+
 "Plugin 'ervandew/supertab'
 "Plugin 'ycm-core/YouCompleteMe'
+"Youcompleteme fix
+"let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py'
+
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-unimpaired'
 "Plugin 'AndrewRadev/undoquit.vim'
@@ -27,13 +56,23 @@ Plugin 'NLKNguyen/papercolor-theme'
 "Plugin 'tikhomirov/vim-glsl'
 
 "Plugin 'w0rp/ale'
+"let g:ale_cpp_clangtidy_checks = ['*', '-cppcoreguidelines-pro-bounds-pointer-arithmetic']
+"let g:ale_enabled = 1
+
 "Plugin 'm-pilia/vim-ccls'
 "Plugin 'skywind3000/vim-preview'
 "Plugin 'gcmt/taboo.vim'
 "Plugin 'SirVer/ultisnips'
+let g:UltiSnipsExpandTrigger="<c-e>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+
 "Plugin 'honza/vim-snippets'
 Plugin 'tommcdo/vim-exchange'
 "Plugin 'OmniSharp/omnisharp-vim'
+"let g:OmniSharp_server_stdio = 1
+"let g:OmniSharp_highlighting = 0
+
 "Plugin 'OrangeT/vim-csharp'
 Plugin 'Chiel92/vim-autoformat'
 
@@ -44,45 +83,6 @@ endif
 call vundle#end()            " required
 filetype plugin indent on    " required
 "}}}
-
-" Allow commenting and inverting empty lines (useful when commenting a region)
-let g:NERDCommentEmptyLines = 1
-" Align line-wise comment delimiters flush left instead of following code indentation
-let g:NERDDefaultAlign = 'left'
-let g:NERDTreeHijackNetrw = 0
-
-let NERDTreeIgnore = ['\.pyc$','\.o$']
-let NERDTreeMinimalUI = 1
-let NERDTreeMapJumpNextSibling = '\<C-J>'
-let NERDTreeMapJumpPrevSibling = '\<C-K>'
-let g:NERDTreeQuitOnOpen = 1
-
-"Youcompleteme fix
-"let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py'
-
-"let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
-"let g:syntastic_check_on_wq = 0
-let g:syntastic_mode_map = { 'passive_filetypes': ['python'] }
-let g:syntastic_cpp_check_header = 1
-
-"Makes ctrlp ignore filetypes in the .gitignore, also makes it open faster
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
-let g:ctrlp_by_filename = 1
-let g:ctrlp_switch_buffer = 0
-
-let g:ackprg = 'ag --vimgrep'
-
-"let g:ale_cpp_clangtidy_checks = ['*', '-cppcoreguidelines-pro-bounds-pointer-arithmetic']
-"let g:ale_enabled = 1
-
-"let g:OmniSharp_server_stdio = 1
-"let g:OmniSharp_highlighting = 0
-
-let g:UltiSnipsExpandTrigger="<c-e>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
 set sessionoptions=blank,curdir,folds,help,tabpages,terminal,winsize
 
