@@ -174,7 +174,12 @@ vmap <Leader>P "+P
 " If vim lacks proper clipboard support, this is very useful.
 nnoremap <Leader><Leader>p :call PrintRegisterForCopying()<CR>
 " Copies the file name and line number into the clipboard
-nnoremap <Leader><Leader>gF :let @"=join([expand('%'),  line(".")], ':')<CR>
+"nnoremap <Leader>yf :let @"=join([expand('%'),  line(".")], ':')<CR>
+"nnoremap <Leader>yf :let @+=join([expand('%'),  line(".")], ':')<CR>:echo "Yanked ".@+." into clipboard."<CR>
+nnoremap <Leader>yf :exec "!echo " .'"'. expand('%') . ":" . line('.') . '"' . "\| ~/.vim/it2copy_vim"<CR>
+"nnoremap <Leader>gf :call GoToFileLine("<C-R>"")<CR>
+"nnoremap <Leader>gf :call GoToFileLine("<C-R>+")<CR>:echo "Navigated to ".@+<CR>
+nnoremap <Leader>gf :call GoToFileLine("")<Left><Left>
 " Convenient way to exit insert mode
 "inoremap jk <Esc>
 "inoremap kj <Esc>
@@ -311,6 +316,13 @@ set statusline+=\ %3p%%\
 
 "}}}
 "{{{Functions
+
+function GoToFileLine(file_line)
+    let l:arr = split(a:file_line, ":")
+    let l:file = l:arr[0]
+    let l:line = l:arr[1]
+    execute "edit +".l:line." ".l:file
+endfunction
 
 function PrintRegisterForCopying()
 	silent execute "!clear"
