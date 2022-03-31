@@ -198,9 +198,6 @@ nnoremap , za
 
 command SudoWrite w !sudo tee > /dev/null %
 
-" Makes <Leader>h switch between .cpp and .h files
-nnoremap <Leader>h :update<CR>:e %:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,:s,.frag$,.X123X,:s,.vert$,.frag,:s,.X123X$,.vert,<CR><space>
-
 " Faster scrolling
 nnoremap ) 5<C-e>
 nnoremap ( 5<C-y>
@@ -581,6 +578,11 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+" Makes <Leader>h switch between .cpp and .h files
+" This was the old, hacky way.
+"nnoremap <Leader>h :update<CR>:e %:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,:s,.frag$,.X123X,:s,.vert$,.frag,:s,.X123X$,.vert,<CR><space>
+nnoremap <Leader>h :CocCommand clangd.switchSourceHeader<CR>
+
 "}}}
 "}}}
 "{{{ Unused shortcuts
