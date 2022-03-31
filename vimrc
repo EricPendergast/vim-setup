@@ -589,7 +589,9 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+" Commented because conflict with existing mapping
+"nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
 " Makes <Leader>h switch between .cpp and .h files
 " This was the old, hacky way.
 "nnoremap <Leader>h :update<CR>:e %:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,:s,.frag$,.X123X,:s,.vert$,.frag,:s,.X123X$,.vert,<CR><space>
