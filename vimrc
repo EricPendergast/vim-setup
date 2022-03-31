@@ -22,7 +22,8 @@ let g:syntastic_cpp_check_header = 1
 
 Plug 'ctrlpvim/ctrlp.vim'
 "Makes ctrlp ignore filetypes in the .gitignore, also makes it open faster
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
+let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+
 let g:ctrlp_by_filename = 1
 let g:ctrlp_switch_buffer = 0
 
