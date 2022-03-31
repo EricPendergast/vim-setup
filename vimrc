@@ -174,9 +174,7 @@ vmap <Leader>P "+P
 " If vim lacks proper clipboard support, this is very useful.
 nnoremap <Leader><Leader>p :call PrintRegisterForCopying()<CR>
 " Copies the file name and line number into the clipboard
-"nnoremap <Leader>yf :let @"=join([expand('%'),  line(".")], ':')<CR>
-"nnoremap <Leader>yf :let @+=join([expand('%'),  line(".")], ':')<CR>:echo "Yanked ".@+." into clipboard."<CR>
-nnoremap <Leader>yf :exec "!echo " .'"'. expand('%') . ":" . line('.') . '"' . "\| ~/.vim/it2copy_vim"<CR>
+nnoremap <Leader>yf :call CopyFileLine()<CR>
 "nnoremap <Leader>gf :call GoToFileLine("<C-R>"")<CR>
 "nnoremap <Leader>gf :call GoToFileLine("<C-R>+")<CR>:echo "Navigated to ".@+<CR>
 nnoremap <Leader>gf :call GoToFileLine("")<Left><Left>
@@ -193,6 +191,7 @@ command W w
 command Wq wq
 command Q q
 command WQ wq
+
 
 command DeleteHiddenBuffers call DeleteHiddenBuffers()
 
@@ -316,6 +315,16 @@ set statusline+=\ %3p%%\
 
 "}}}
 "{{{Functions
+
+function CopyFileLine()
+    let l:file_line = expand('%') . ":" . line('.')
+    " Using multiple methods in case any of them fail
+    exec "silent !echo -n " .'"'. l:file_line . '"' . "\| ~/.vim/it2copy_vim && echo 'Copied path and line number to clipboard.'"
+	redraw!
+    let @+=l:file_line
+    let @*=l:file_line
+	echo "Copied \"" . l:file_line . "\" into the clipboard."
+endfunction
 
 function GoToFileLine(file_line)
     let l:arr = split(a:file_line, ":")
