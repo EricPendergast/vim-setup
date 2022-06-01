@@ -170,6 +170,8 @@ nmap <Leader>p "+p
 nmap <Leader>P "+P
 vmap <Leader>p "+p
 vmap <Leader>P "+P
+vnoremap <leader><leader>y <esc>:'<,'>:w !~/.vim/it2copy_vim<CR>
+
 
 " If vim lacks proper clipboard support, this is very useful.
 nnoremap <Leader><Leader>p :call PrintRegisterForCopying()<CR>
