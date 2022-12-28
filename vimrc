@@ -20,12 +20,18 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_mode_map = { 'passive_filetypes': ['python'] }
 let g:syntastic_cpp_check_header = 1
 
-Plug 'ctrlpvim/ctrlp.vim'
+"Plug 'ctrlpvim/ctrlp.vim'
 "Makes ctrlp ignore filetypes in the .gitignore, also makes it open faster
-let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+"let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+"let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 
-let g:ctrlp_by_filename = 1
-let g:ctrlp_switch_buffer = 0
+"let g:ctrlp_by_filename = 1
+"let g:ctrlp_switch_buffer = 0
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+nnoremap <C-P> :Files<CR>
 
 Plug 'scrooloose/nerdcommenter'
 " Allow commenting and inverting empty lines (useful when commenting a region)
@@ -39,6 +45,8 @@ let g:NERDDefaultAlign = 'left'
 "let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py'
 
 Plug 'tpope/vim-fugitive'
+nnoremap <Leader>e :Gedit<CR>
+
 Plug 'tpope/vim-unimpaired'
 "Plug 'AndrewRadev/undoquit.vim'
 " Colorschemes
@@ -72,6 +80,9 @@ Plug 'Chiel92/vim-autoformat'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+" Allows copying of text over ssh without any need for X forwarding
+Plug 'ojroques/vim-oscyank', {'branch': 'main'}
+
 if !has("terminal")
     Plug 'vim-scripts/Conque-GDB'
 endif
@@ -79,7 +90,7 @@ endif
 call plug#end()            " required
 "}}}
 
-set sessionoptions=blank,curdir,folds,help,tabpages,terminal,winsize
+set sessionoptions=blank,curdir,folds,help,tabpages,terminal,winsize,buffers
 
 "nnoremap <C-]> :ALEGoToDefinition<CR>
 "nnoremap <C-W><C-]> :ALEGoToDefinitionInSplit<CR>
@@ -117,6 +128,7 @@ set hlsearch 		" highlight matches
 set autoindent
 set linebreak 		"makes the lines break at spaces when it wraps
 set mouse=nv 		"allows use of mouse in normal and visual mode (not insert mode)
+set ttymouse=xterm2
 set wildmenu		"shows a visual menu for tab completion
 set lazyredraw      "speeds up macros by not redrawing the screen during them
 "set termguicolors   "lets the terminal use truecolor (16 million colors)
@@ -164,12 +176,12 @@ inoremap {<CR> {<CR>}<Esc>ko
     
 
 " Copying and pasting from the system clipboard
-vmap <Leader>y "+y
-vmap <Leader>d "+d
-nmap <Leader>p "+p
-nmap <Leader>P "+P
-vmap <Leader>p "+p
-vmap <Leader>P "+P
+vnoremap <leader>y :OSCYank<CR>
+vnoremap <Leader>d d:OSCYankReg "<CR>
+nnoremap <Leader>p "+p
+nnoremap <Leader>P "+P
+vnoremap <Leader>p "+p
+vnoremap <Leader>P "+P
 vnoremap <leader><leader>y <esc>:'<,'>:w !~/.vim/it2copy_vim<CR>
 
 
@@ -586,19 +598,19 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Mappings for CoCList
 " Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+"nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+"" Manage extensions.
+"nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+"" Show commands.
+"nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+"" Find symbol of current document.
+"nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+"" Search workspace symbols.
+"nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+"" Do default action for next item.
+"nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+"" Do default action for previous item.
+"nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 " Commented because conflict with existing mapping
 "nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
