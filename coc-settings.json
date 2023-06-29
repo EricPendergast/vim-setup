@@ -1,4 +1,7 @@
 {
+    "clangd.path":"/home/ericp/bin/clangd-docker",
     "suggest.autoTrigger":"none",
-    "coc.preferences.useQuickfixForLocations":true
+    "suggest.noselect": true,
+    "coc.preferences.useQuickfixForLocations":true,
+    "inlayHint.enable": false
 }

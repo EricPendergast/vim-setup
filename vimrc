@@ -1,13 +1,37 @@
 "{{{ Plugins
+let mapleader = "\<Space>"
 call plug#begin()
 
-Plug 'scrooloose/nerdtree'
-let g:NERDTreeHijackNetrw = 0
-let NERDTreeIgnore = ['\.pyc$','\.o$']
-let NERDTreeMinimalUI = 1
-let NERDTreeMapJumpNextSibling = '\<C-J>'
-let NERDTreeMapJumpPrevSibling = '\<C-K>'
-let g:NERDTreeQuitOnOpen = 1
+if !has('nvim')
+    Plug 'scrooloose/nerdtree'
+    let g:NERDTreeHijackNetrw = 0
+    let NERDTreeIgnore = ['\.pyc$','\.o$']
+    let NERDTreeMinimalUI = 1
+    let NERDTreeMapJumpNextSibling = '\<C-J>'
+    let NERDTreeMapJumpPrevSibling = '\<C-K>'
+    let g:NERDTreeQuitOnOpen = 1
+    " Open nerd tree command
+    nnoremap <Leader>t :NERDTreeToggle<CR>
+    nnoremap <leader>w :call SyncTree()<CR>
+    function! SyncTree()
+      if &modifiable
+        NERDTreeFind
+        wincmd p
+      endif
+    endfunction
+else
+    Plug 'nvim-tree/nvim-tree.lua'
+    nnoremap <leader>t :NvimTreeToggle<CR>
+    nnoremap <leader>w :call SyncTree()<CR>
+    function! SyncTree()
+      if &modifiable
+        NvimTreeFindFile
+        wincmd p
+      endif
+    endfunction
+endif
+
+
 
 Plug 'tpope/vim-vinegar'
 Plug 'mileszs/ack.vim'
@@ -19,7 +43,10 @@ let g:syntastic_auto_loc_list = 1
 "let g:syntastic_check_on_wq = 0
 let g:syntastic_mode_map = { 'passive_filetypes': ['python'] }
 let g:syntastic_cpp_check_header = 1
+" Removes the error list
+"nnoremap <Leader>r :SyntasticReset<CR>
 
+" Removed ctrlp to replace with fzf
 "Plug 'ctrlpvim/ctrlp.vim'
 "Makes ctrlp ignore filetypes in the .gitignore, also makes it open faster
 "let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
@@ -30,10 +57,11 @@ let g:syntastic_cpp_check_header = 1
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-
+let g:fzf_layout = { 'down': '40%' }
 nnoremap <C-P> :Files<CR>
 
 Plug 'scrooloose/nerdcommenter'
+let g:NERDCreateDefaultMappings = 0
 " Allow commenting and inverting empty lines (useful when commenting a region)
 let g:NERDCommentEmptyLines = 1
 " Align line-wise comment delimiters flush left instead of following code indentation
@@ -58,6 +86,7 @@ Plug 'NLKNguyen/papercolor-theme'
 "Plug 'tikhomirov/vim-glsl'
 
 "Plug 'w0rp/ale'
+"nnoremap <Leader>r :ALEToggle<CR>
 "let g:ale_cpp_clangtidy_checks = ['*', '-cppcoreguidelines-pro-bounds-pointer-arithmetic']
 "let g:ale_enabled = 1
 
@@ -80,17 +109,32 @@ Plug 'Chiel92/vim-autoformat'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+Plug 'puremourning/vimspector'
+let g:vimspector_enable_mappings = 'HUMAN'
+
+" Or alternatively:
+"Plug 'cpiger/NeoDebug'
+
 " Allows copying of text over ssh without any need for X forwarding
 Plug 'ojroques/vim-oscyank', {'branch': 'main'}
 
-if !has("terminal")
+if !exists(":tnoremap")
     Plug 'vim-scripts/Conque-GDB'
 endif
 
-call plug#end()            " required
+Plug 'tpope/vim-rhubarb'
+Plug 'shumphrey/fugitive-gitlab.vim'
+let g:fugitive_gitlab_domains = ['https://gitlab.i.extrahop.com']
+
+
+call plug#end()
+
 "}}}
 
+
 set sessionoptions=blank,curdir,folds,help,tabpages,terminal,winsize,buffers
+set guicursor=n-v-c:block-Cursor/lCursor,ve:block-Cursor,o:block-Cursor,i:block-Cursor/lCursor,r:block-Cursor/lCursor,sm:block-Cursor-blinkwait175-blinkoff150-blinkon175
+set fillchars=vert:\|
 
 "nnoremap <C-]> :ALEGoToDefinition<CR>
 "nnoremap <C-W><C-]> :ALEGoToDefinitionInSplit<CR>
@@ -115,6 +159,7 @@ filetype plugin on 	"enables different vimrc's for different filetypes
 syntax enable
 
 colorscheme PaperColor
+hi VertSplit gui=reverse
 set background=dark
 set shiftwidth=4                " use indents of 4 spaces
 set expandtab                   " tabs are spaces, not tabs
@@ -128,7 +173,9 @@ set hlsearch 		" highlight matches
 set autoindent
 set linebreak 		"makes the lines break at spaces when it wraps
 set mouse=nv 		"allows use of mouse in normal and visual mode (not insert mode)
-set ttymouse=xterm2
+if !has('nvim')
+    set ttymouse=xterm2
+endif
 set wildmenu		"shows a visual menu for tab completion
 set lazyredraw      "speeds up macros by not redrawing the screen during them
 "set termguicolors   "lets the terminal use truecolor (16 million colors)
@@ -146,7 +193,6 @@ set synmaxcol=1000
 
 "}}}
 "{{{ Key Remaps
-let mapleader = "\<Space>"
 
 " allows the cursor to move through wrapped lines elegantly
 nnoremap j gj
@@ -196,8 +242,6 @@ nnoremap <Leader>gf :call GoToFileLine("")<Left><Left>
 "inoremap jk <Esc>
 "inoremap kj <Esc>
 
-
-
 command MakeTags :!ctags -R .
 
 " So that I can q and wq without worrying if the shift is held
@@ -206,11 +250,8 @@ command Wq wq
 command Q q
 command WQ wq
 
-
 command DeleteHiddenBuffers call DeleteHiddenBuffers()
-
-" Open nerd tree command
-nnoremap <Leader>t :NERDTreeToggle<CR>
+nnoremap <Leader>c :call ToggleQuickFix()<CR>
 
 nnoremap , za
 
@@ -226,14 +267,18 @@ vnoremap ( 5<C-y>
 nnoremap ZZ <nop>
 nnoremap ZQ <nop>
 
-" Removes the error list
-"nnoremap <Leader>r :SyntasticReset<CR>
-nnoremap <Leader>r :ALEToggle<CR>
-
 nnoremap <Leader><Leader>r :redraw!<CR>
 
 " Allows for pressing Ctrl-D for toggling between vim and the terminal
-nnoremap <C-D> :sh<CR>
+if !has("nvim")
+    nnoremap <C-D> :sh<CR>
+else
+    function NvimSh()
+        term
+        tnoremap <buffer> <C-D> <C-D><C-D>
+    endfunc
+    nnoremap <C-D> :call NvimSh()<CR>
+endif
 
 nnoremap <C-I> <C-I>zz
 nnoremap <C-O> <C-O>zz
@@ -241,29 +286,48 @@ nnoremap <C-O> <C-O>zz
 nnoremap <C-T> <C-T>zz
 
 """""""" Window stuff
-if has("terminal")
-    tnoremap <C-W>gt <C-W>:tabn<CR>
-    tnoremap <C-W>gT <C-W>:tabp<CR>
-    tnoremap <C-J> <C-W><C-J>
-    tnoremap <C-K> <C-W><C-K>
-    tnoremap <C-L> <C-W><C-L>
-    tnoremap <C-W><C-J> <C-J>
-    tnoremap <C-W><C-K> <C-K>
-    tnoremap <C-W><C-L> <C-L>
-	tnoremap <C-W>( <C-W>N5<C-Y>
-	tnoremap <C-W>) <C-W>N5<C-E>
-    nnoremap <C-W>d :Termdebug<CR>
-	autocmd TerminalOpen * setlocal nonumber
-else
-    nnoremap <C-W>d :ConqueGdb bash<CR>
+if exists(":tnoremap")
+    if exists(":Termdebug")
+        nnoremap <C-W>d :Termdebug<CR>
+    endif
+    if !has("nvim")
+        command TermHere :call TermHere()
+        autocmd TerminalOpen * setlocal nonumber
+        tnoremap <C-W>gt <C-W>:tabn<CR>
+        tnoremap <C-W>gT <C-W>:tabp<CR>
+        tnoremap <C-J> <C-W><C-J>
+        tnoremap <C-K> <C-W><C-K>
+        tnoremap <C-L> <C-W><C-L>
+        tnoremap <C-W><C-J> <C-J>
+        tnoremap <C-W><C-K> <C-K>
+        tnoremap <C-W><C-L> <C-L>
+        tnoremap <C-W>( <C-W>N5<C-Y>
+        tnoremap <C-W>) <C-W>N5<C-E>
+    else
+        autocmd TermOpen * setlocal nonumber
+        autocmd TermOpen * startinsert
+        tnoremap <C-W>      <C-\><C-O><C-W>
+        tnoremap <C-W>gt    <C-\><C-O>:tabn<CR>
+        tnoremap <C-W>gT    <C-\><C-O>:tabp<CR>
+        tnoremap <C-J>      <C-\><C-N><C-W>j
+        tnoremap <C-K>      <C-\><C-N><C-W>k
+        tnoremap <C-L>      <C-\><C-N><C-W>l
+        tnoremap <C-W>h     <C-\><C-N><C-W>h
+        tnoremap <C-W><C-H> <C-\><C-N><C-W>h
+        tnoremap <C-W><C-J> <C-J>
+        tnoremap <C-W><C-K> <C-K>
+        tnoremap <C-W><C-L> <C-L>
+        cabbrev term sp\|:te
+    endif
 endif
 
 nnoremap <C-W>gt :call MoveToNextTab()<CR>
 nnoremap <C-W>gT :call MoveToPrevTab()<CR>
 
-nnoremap <leader>w :call SyncTree()<CR>
 
 xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+
+map <F6> :let $VIM_DIR=expand('%:p:h')<CR>:terminal<CR>cd $VIM_DIR<CR>
 
 command! AddIncludeGuards :normal! mmggO#ifndef <Esc>:put =expand('%{@%}')<CR>:s/\V\/\|./_/g<CR>VUo<Esc>kyypkkJo#define <Esc>JGo<CR>#endif<Esc>'mzz
 
@@ -290,7 +354,12 @@ let &runtimepath.=','.vimDir
 
 " Keep undo history across sessions by storing it in a file
 if has('persistent_undo')
-    let myUndoDir = expand(vimDir . '/undodir')
+    if !has('nvim')
+        let myUndoDir = expand(vimDir . '/undodir')
+    else
+        let myUndoDir = expand(vimDir . '/undodir-nvim')
+    endif
+
     " Create dirs
     call system('mkdir ' . vimDir)
     call system('mkdir ' . myUndoDir)
@@ -363,13 +432,6 @@ function! ExecuteMacroOverVisualRange()
   execute ":'<,'>normal @".nr2char(getchar())
 endfunction
 
-function! SyncTree()
-  if &modifiable
-    NERDTreeFind
-    wincmd p
-  endif
-endfunction
-
 function MoveToPrevTab()
   "there is only one window
   if tabpagenr('$') == 1 && winnr('$') == 1
@@ -436,12 +498,29 @@ function RunCommandInExistingShell(command_text)
     "call feedkeys(":windo if expand('%')=='bash - 1'| call feedkeys('i') | throw 'error' |  endif\<CR>")
 endfunc
 
+function TermHere()
+    if has("terminal")
+        let dir = expand("%:p:h")
+        normal :terminal
+        let term_name = expand("%")
+        call term_sendkeys(term_name, "cd " . dir . "clear")
+    endif
+endfunc
+
 function DeleteHiddenBuffers()
     let tpbl=[]
     call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
     for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
         silent execute 'bwipeout' buf
     endfor
+endfunction
+
+function! ToggleQuickFix()
+    if empty(filter(getwininfo(), 'v:val.quickfix && v:val.tabnr == tabpagenr()'))
+        copen
+    else
+        cclose
+    endif
 endfunction
 
 "{{{ coc.vim
@@ -479,14 +558,14 @@ endif
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+function! CheckBackspace() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 " Use <c-space> to trigger completion.
@@ -545,27 +624,27 @@ augroup end
 
 " Applying codeAction to the selected region.
 " Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
+"xmap <leader>a  <Plug>(coc-codeaction-selected)
+"nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 " Remap keys for applying codeAction to the current buffer.
-nmap <leader>ac  <Plug>(coc-codeaction)
+"nmap <leader>ac  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
-nmap <leader>qf  <Plug>(coc-fix-current)
+"nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Run the Code Lens action on the current line.
-nmap <leader>cl  <Plug>(coc-codelens-action)
+"nmap <leader>cl  <Plug>(coc-codelens-action)
 
 " Map function and class text objects
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-xmap if <Plug>(coc-funcobj-i)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap af <Plug>(coc-funcobj-a)
-xmap ic <Plug>(coc-classobj-i)
-omap ic <Plug>(coc-classobj-i)
-xmap ac <Plug>(coc-classobj-a)
-omap ac <Plug>(coc-classobj-a)
+"xmap if <Plug>(coc-funcobj-i)
+"omap if <Plug>(coc-funcobj-i)
+"xmap af <Plug>(coc-funcobj-a)
+"omap af <Plug>(coc-funcobj-a)
+"xmap ic <Plug>(coc-classobj-i)
+"omap ic <Plug>(coc-classobj-i)
+"xmap ac <Plug>(coc-classobj-a)
+"omap ac <Plug>(coc-classobj-a)
 
 " Remap <C-f> and <C-b> for scroll float windows/popups.
 if has('nvim-0.4.0') || has('patch-8.2.0750')
@@ -606,7 +685,7 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 "" Find symbol of current document.
 "nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
 "" Search workspace symbols.
-"nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
 "" Do default action for next item.
 "nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 "" Do default action for previous item.
@@ -669,3 +748,36 @@ nnoremap <Leader>h :CocCommand clangd.switchSourceHeader<CR>
 
 "set scrolloff=3		"leaves 3 lines between cursor and end of screen
 "}}}
+
+if has('nvim')
+    lua << EOF
+    require("nvim-tree").setup({
+      hijack_netrw = false,
+      renderer = {
+        icons = {
+          show = {
+            git = true,
+            file = false,
+            folder = false,
+            folder_arrow = true,
+          },
+          glyphs = {
+            folder = {
+              arrow_closed = "▸",
+              arrow_open = "▾",
+            },
+            git = {
+              unstaged = "✗",
+              staged = "✓",
+              unmerged = "⌥",
+              renamed = "➜",
+              untracked = "★",
+              deleted = "⊖",
+              ignored = "◌",
+            },
+          },
+        },
+      },
+    })
+EOF
+endif
