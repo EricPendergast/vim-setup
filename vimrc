@@ -272,12 +272,6 @@ nnoremap <Leader><Leader>r :redraw!<CR>
 " Allows for pressing Ctrl-D for toggling between vim and the terminal
 if !has("nvim")
     nnoremap <C-D> :sh<CR>
-else
-    function NvimSh()
-        term
-        tnoremap <buffer> <C-D> <C-D><C-D>
-    endfunc
-    nnoremap <C-D> :call NvimSh()<CR>
 endif
 
 nnoremap <C-I> <C-I>zz
@@ -306,6 +300,7 @@ if exists(":tnoremap")
     else
         autocmd TermOpen * setlocal nonumber
         autocmd TermOpen * startinsert
+        tnoremap <C-W><C-W> <C-\><C-N>
         tnoremap <C-W>      <C-\><C-O><C-W>
         tnoremap <C-W>gt    <C-\><C-O>:tabn<CR>
         tnoremap <C-W>gT    <C-\><C-O>:tabp<CR>
@@ -753,6 +748,7 @@ if has('nvim')
     lua << EOF
     require("nvim-tree").setup({
       hijack_netrw = false,
+      hijack_directories = false,
       renderer = {
         icons = {
           show = {
@@ -778,6 +774,14 @@ if has('nvim')
           },
         },
       },
+      view = {
+        mappings = {
+          list = {
+            -- { key = "<CR>", action = "edit_in_place" }
+          }
+        }
+      }
     })
+    -- require"nvim-tree".open_replacing_current_buffer()
 EOF
 endif
