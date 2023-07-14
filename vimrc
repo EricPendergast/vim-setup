@@ -109,8 +109,9 @@ Plug 'Chiel92/vim-autoformat'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-Plug 'puremourning/vimspector'
-let g:vimspector_enable_mappings = 'HUMAN'
+" Visual debugger. Turned off because nvim complains about requiring python3
+"Plug 'puremourning/vimspector'
+"let g:vimspector_enable_mappings = 'HUMAN'
 
 " Or alternatively:
 "Plug 'cpiger/NeoDebug'
@@ -222,8 +223,8 @@ inoremap {<CR> {<CR>}<Esc>ko
     
 
 " Copying and pasting from the system clipboard
-vnoremap <leader>y :OSCYank<CR>
-vnoremap <Leader>d d:OSCYankReg "<CR>
+vnoremap <leader>y <Plug>OSCYankVisual
+nnoremap <leader>y <Plug>OSCYankOperator
 nnoremap <Leader>p "+p
 nnoremap <Leader>P "+P
 vnoremap <Leader>p "+p
@@ -748,7 +749,9 @@ if has('nvim')
     lua << EOF
     require("nvim-tree").setup({
       hijack_netrw = false,
-      hijack_directories = false,
+      hijack_directories = {
+          enable = false
+      },
       renderer = {
         icons = {
           show = {
