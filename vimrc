@@ -777,13 +777,6 @@ if has('nvim')
           },
         },
       },
-      view = {
-        mappings = {
-          list = {
-            -- { key = "<CR>", action = "edit_in_place" }
-          }
-        }
-      }
     })
     -- require"nvim-tree".open_replacing_current_buffer()
 EOF
