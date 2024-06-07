@@ -76,7 +76,7 @@ Plug 'tpope/vim-fugitive'
 nnoremap <Leader>e :Gedit<CR>
 
 Plug 'tpope/vim-unimpaired'
-"Plug 'AndrewRadev/undoquit.vim'
+Plug 'AndrewRadev/undoquit.vim'
 " Colorschemes
 "Plug 'blueshirts/darcula'
 "Plug 'sjl/badwolf'
@@ -398,8 +398,9 @@ set statusline+=\ %3p%%\
 function CopyFileLine()
     let l:file_line = expand('%') . ":" . line('.')
     " Using multiple methods in case any of them fail
+    call OSCYank(l:file_line)
     exec "silent !echo -n " .'"'. l:file_line . '"' . "\| ~/.vim/it2copy_vim && echo 'Copied path and line number to clipboard.'"
-	redraw!
+    redraw!
     let @+=l:file_line
     let @*=l:file_line
 	echo "Copied \"" . l:file_line . "\" into the clipboard."
@@ -617,6 +618,30 @@ augroup mygroup
   " Update signature help on jump placeholder.
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
+
+autocmd BufEnter * call CheckOutline()
+function! CheckOutline() abort
+  if &filetype ==# 'coctree' && winnr('$') == 1
+    if tabpagenr('$') != 1
+      close
+    else
+      bdelete
+    endif
+  endif
+endfunction
+
+nnoremap <silent><nowait> <space>o  :call ToggleOutline()<CR>
+function! ToggleOutline() abort
+  let winid = coc#window#find('cocViewId', 'OUTLINE')
+  if winid == -1
+    call CocActionAsync('showOutline', 1)
+  else
+    call coc#window#close(winid)
+  endif
+endfunction
+
+command CocCallHeirarchy call CocAction('showIncomingCalls')
+
 
 " Applying codeAction to the selected region.
 " Example: `<leader>aap` for current paragraph
