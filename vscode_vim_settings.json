@@ -1,0 +1,37 @@
+{
+    "vim.hlsearch": true,
+    "vim.normalModeKeyBindings": [
+        {
+            "before": ["("],
+            "after": ["5", "<C-y>"]
+        },
+        {
+            "before": [")"],
+            "after": ["5", "<C-e>"]
+        },
+        {
+            "before":["<space>", "<space>", "y", "f"],
+            "commands": [
+                "copy-relative-path-and-line-numbers.both",
+            ]
+        },
+        {
+            "before":["<space>", "y", "f"],
+            "commands": [
+                "copy-relative-path-and-line-numbers.both",
+            ]
+        },
+        {
+            "before":["<space>", "<space>", "g", "f"],
+            "commands": [
+                "workbench.action.quickOpen", "editor.action.clipboardPasteAction"
+            ]
+        },
+        {
+            "before":["<space>", "g", "f"],
+            "commands": [
+                "workbench.action.quickOpen", "editor.action.clipboardPasteAction"
+            ]
+        }
+    ]
+}
