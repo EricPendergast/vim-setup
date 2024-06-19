@@ -107,7 +107,20 @@ Plug 'tommcdo/vim-exchange'
 "Plug 'OrangeT/vim-csharp'
 Plug 'Chiel92/vim-autoformat'
 
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+if !has("nvim")
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+endif
+
+" Mason can install LSP servers, among other things. Should be initialized
+" before nvim-lspconfig
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
+Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
 
 " Visual debugger. Turned off because nvim complains about requiring python3
 "Plug 'puremourning/vimspector'
