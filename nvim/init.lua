@@ -117,6 +117,26 @@ cmp.setup({
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 require('lspconfig').lua_ls.setup {
+    settings = {
+        Lua = {
+            runtime = {
+                version = 'LuaJIT',
+                path = vim.split(package.path, ';')
+            },
+            diagnostics = {
+                globals = {'vim'}
+            },
+            workspace = {
+                library = {
+                    [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+                    [vim.fn.stdpath('config') .. '/lua'] = true
+                }
+            },
+            telemetry = {
+                enable = false,
+            },
+        },
+    },
     capabilities = capabilities
 }
 require('lspconfig').omnisharp.setup {
