@@ -236,7 +236,7 @@ inoremap {<CR> {<CR>}<Esc>ko
     
 
 " Copying and pasting from the system clipboard
-vnoremap <leader>y <Plug>OSCYankVisual
+vnoremap <leader>y "+ygv"*ygv<Plug>OSCYankVisual
 nnoremap <leader>y <Plug>OSCYankOperator
 nnoremap <Leader>p "+p
 nnoremap <Leader>P "+P
