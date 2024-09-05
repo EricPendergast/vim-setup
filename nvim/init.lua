@@ -139,9 +139,54 @@ require('lspconfig').lua_ls.setup {
     },
     capabilities = capabilities
 }
+
+local on_attach = function(client, bufnr)
+    local bufopts = { noremap=true, silent=true, buffer=bufnr }
+
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts) -- show documentation
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts) -- go to definition
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts) -- find references
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts) -- rename symbol
+    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts) -- code action
+    vim.keymap.set('n', '<leader>h', ':ClangdSwitchSourceHeader<CR>', bufopts) -- switch between header and source files
+end
+
+-- See https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
+
 require('lspconfig').omnisharp.setup {
     capabilities = capabilities,
+    on_attach = on_attach,
 }
 require('lspconfig').gdscript.setup {
-    capabilities = capabilities
+    capabilities = capabilities,
+    on_attach = on_attach,
 }
+require('lspconfig').clangd.setup {
+    capabilities = capabilities,
+    on_attach = on_attach,
+}
+-- :MasonInstall python-lsp-server
+require('lspconfig').pylsp.setup {
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = {
+        pylsp = {
+            plugins = {
+                jedi = {
+                    extra_paths = {
+                    }
+                },
+                pycodestyle = {
+                }
+            }
+        }
+    }
+}
+-- :MasonInstall gopls
+require('lspconfig').gopls.setup {
+    capabilities = capabilities,
+    on_attach = on_attach,
+}
+
+vim.lsp.set_log_level("debug")
+
