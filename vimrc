@@ -192,7 +192,7 @@ if !has('nvim')
 endif
 set wildmenu		"shows a visual menu for tab completion
 set lazyredraw      "speeds up macros by not redrawing the screen during them
-"set termguicolors   "lets the terminal use truecolor (16 million colors)
+set termguicolors   "lets the terminal use truecolor (16 million colors)
 set foldenable
 set foldmethod=indent
 "set foldmethod=marker

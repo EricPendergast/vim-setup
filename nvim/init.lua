@@ -80,7 +80,7 @@ cmp.setup({
                 end
             end,
             s = cmp.mapping.confirm({ select = true }),
-            c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+            --c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
         }),
         ['<Tab>'] = function(fallback)
             if not cmp.select_next_item() then
@@ -187,6 +187,12 @@ require('lspconfig').gopls.setup {
     capabilities = capabilities,
     on_attach = on_attach,
 }
+-- :MasonInstall json-lsp
+require'lspconfig'.jsonls.setup {
+    capabilities = capabilities,
+    on_attach = on_attach,
+}
+
 
 vim.lsp.set_log_level("debug")
 
