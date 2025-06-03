@@ -9,7 +9,7 @@ git pull ...
 mv ... ~/.vim
 
 # For neovim, link init.lua
-ln -s ~/.vim/nvim/init.lua ~/.config/nvim/init.lua
+ln -s ~/.vim ~/.config/nvim
 
 nvim
 # inside nvim
