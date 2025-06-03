@@ -80,8 +80,16 @@ cmp.setup({
                 end
             end,
             s = cmp.mapping.confirm({ select = true }),
-            --c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
         }),
+        ['<C-Space>'] = function(fallback)
+            if not cmp.select_next_item() then
+                if vim.bo.buftype ~= 'prompt' then
+                    cmp.complete()
+                else
+                    fallback()
+                end
+            end
+        end,
         ['<Tab>'] = function(fallback)
             if not cmp.select_next_item() then
                 if vim.bo.buftype ~= 'prompt' and has_words_before() then
@@ -100,12 +108,13 @@ cmp.setup({
                 end
             end
         end,
-        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-e>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-y>'] = cmp.mapping.scroll_docs(4),
     },
     sources = cmp.config.sources({
+        { name = 'nvim_lsp_signature_help' },
         { name = 'nvim_lsp' },
-        { name = 'buffer' },
+        --{ name = 'buffer' },
         --{ name = 'vsnip' }, -- For vsnip users.
         -- { name = 'luasnip' }, -- For luasnip users.
         -- { name = 'ultisnips' }, -- For ultisnips users.
@@ -150,13 +159,57 @@ local on_attach = function(client, bufnr)
     vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts) -- code action
     vim.keymap.set('n', '<leader>h', ':ClangdSwitchSourceHeader<CR>', bufopts) -- switch between header and source files
 end
+vim.keymap.set('n', '<leader>f', vim.diagnostic.open_float)
+
 
 -- See https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
 
-require('lspconfig').omnisharp.setup {
+-- :MasonInstall omnisharp
+-- On Mac, may require a .dylib:
+--  brew install --cask dotnet-sdk
+--  export DOTNET_ROOT="/usr/local/share/dotnet"
+--require('lspconfig').omnisharp.setup {
+--    capabilities = capabilities,
+--    on_attach = on_attach_omnisharp,
+--    cmd = {
+--        -- For some reason, things break unless cmd is specified manually
+--        "OmniSharp",
+--        "--languageserver",
+--        "--hostPID",
+--        tostring(vim.fn.getpid()),
+--        "--DotNet:enablePackageRestore=false",
+--        "--FormattingOptions:EnableEditorConfigSupport=true",
+--        "--Sdk:IncludePrereleases=true",
+--        "--encoding",
+--        "utf-8"
+--    },
+--    settings = {
+--        FormattingOptions = {
+--            EnableEditorConfigSupport = true,
+--            OrganizeImports = false,
+--            InsertSpaces = true,
+--            TabSize = 4,
+--        },
+--    },
+--    enable_roslyn_analyzers = true,
+--    enable_import_completion = true,
+--    organize_imports_on_format = true,
+--}
+-- Put at ~/.omnisharp/omnisharp.json
+-- {
+--  "RoslynExtensionsOptions": {
+--    "enableDecompilationSupport": true
+--  }
+--}
+
+-- :MasonInstall csharp-language-server 
+require('lspconfig').csharp_ls.setup {
     capabilities = capabilities,
     on_attach = on_attach,
 }
+
+require("csharpls_extended").buf_read_cmd_bind()
+
 require('lspconfig').gdscript.setup {
     capabilities = capabilities,
     on_attach = on_attach,
@@ -194,5 +247,16 @@ require'lspconfig'.jsonls.setup {
 }
 
 
-vim.lsp.set_log_level("debug")
+function gdshader()
+   vim.lsp.start {
+       name = "gdshader-lsp",
+       cmd = {
+           --"<path to gdshader-lsp binary>",
+           "gdshader-lsp"
+       },
+       capabilities = vim.lsp.protocol.make_client_capabilities()
+   }
+ end
+
+--vim.lsp.set_log_level("debug")
 
