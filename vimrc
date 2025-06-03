@@ -114,13 +114,16 @@ endif
 " Mason can install LSP servers, among other things. Should be initialized
 " before nvim-lspconfig
 Plug 'williamboman/mason.nvim'
-Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
+Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 Plug 'hrsh7th/nvim-cmp'
+Plug 'Decodetalkers/csharpls-extended-lsp.nvim'
+"Plug 'Hoffs/omnisharp-extended-lsp.nvim'
 
 " Visual debugger. Turned off because nvim complains about requiring python3
 "Plug 'puremourning/vimspector'
@@ -191,6 +194,7 @@ if !has('nvim')
     set ttymouse=xterm2
 endif
 set wildmenu		"shows a visual menu for tab completion
+set wildmode=full
 set lazyredraw      "speeds up macros by not redrawing the screen during them
 set termguicolors   "lets the terminal use truecolor (16 million colors)
 set foldenable
