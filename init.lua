@@ -7,8 +7,19 @@ vim.opt.packpath = vim.opt.runtimepath:get()
 -- Enable true color in terminal
 vim.env.NVIM_TUI_ENABLE_TRUE_COLOR = 1
 
+require("config.lazy")
+
 -- Source the .vimrc file
-vim.cmd("source ~/.vim/vimrc")
+vim.cmd("source ~/.vim/common.vim")
+
+vim.keymap.set('n', '<leader>t', ':NvimTreeToggle<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>w', function()
+  if vim.bo.modifiable then
+    vim.cmd('NvimTreeFindFile')
+    vim.cmd('wincmd p')
+  end
+end, { noremap = true })
+
 
 -- NOTE: Mason should be set up before nvim-lspconfig
 require("mason").setup()
