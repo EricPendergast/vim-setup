@@ -4,6 +4,9 @@ return {
     dependencies = { 'nvim-lua/plenary.nvim' },
     opts = {
         defaults = {
+            file_ignore_patterns = {
+                ".git",
+            },
             mappings = {
                 i = {
                     ["<C-j>"] = require('telescope.actions').move_selection_next,
@@ -14,6 +17,11 @@ return {
                     ["<C-k>"] = require('telescope.actions').move_selection_previous,
                 },
             },
+        },
+        pickers = {
+            find_files = {
+                hidden = true
+            }
         },
     },
 }
