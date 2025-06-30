@@ -176,7 +176,7 @@ local on_attach = function(client, bufnr)
     vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts) -- code action
     vim.keymap.set('n', '<leader>h', ':ClangdSwitchSourceHeader<CR>', bufopts) -- switch between header and source files
 end
-vim.keymap.set('n', '<leader>f', vim.diagnostic.open_float)
+vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float)
 
 
 -- See https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
