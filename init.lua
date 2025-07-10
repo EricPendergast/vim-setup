@@ -22,6 +22,14 @@ end, { noremap = true })
 
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
+vim.keymap.set('n', '<leader>fa', function()
+    builtin.find_files({
+        hidden=true,
+        no_ignore=true,
+        no_ignore_parent=true,
+        file_ignore_patterns={".git/"}
+    })
+end, { desc = 'Telescope find all files' })
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
 vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
@@ -227,13 +235,14 @@ require('lspconfig').csharp_ls.setup {
 
 require("csharpls_extended").buf_read_cmd_bind()
 
-require('lspconfig').gdscript.setup {
-    capabilities = capabilities,
-    on_attach = on_attach,
-}
+--require('lspconfig').gdscript.setup {
+--    capabilities = capabilities,
+--    on_attach = on_attach,
+--}
 require('lspconfig').clangd.setup {
     capabilities = capabilities,
     on_attach = on_attach,
+    cmd = {"/home/ericp/bin/clangd-docker"},
 }
 -- :MasonInstall python-lsp-server
 require('lspconfig').pylsp.setup {
@@ -244,6 +253,7 @@ require('lspconfig').pylsp.setup {
             plugins = {
                 jedi = {
                     extra_paths = {
+                        "build/config", "extrahop/lib/pyexlib", "extrahop/lib/pyexstats", "extrahop/lib", "extrahop/license", "extrahop/trend", "extrahop", "vendor/django-postgresql-netfields", "vendor/django-stubs/django_stubs_ext", "vendor/django-stubs", "vendor/django_cte", "vendor/inflection", "vendor/inotifyx", "vendor/jinja-vanish", "vendor/libtaxii", "vendor/python-cybox", "vendor/python-pam", "vendor/python-stix", "vendor/stix-ramrod", "vendor/readerwriterlock", "vendor", "vendor/Django"
                     }
                 },
                 pycodestyle = {
