@@ -11,13 +11,19 @@ return {
       }
     }
   },
+  -- Doesn't seem to be useful anymore
+  --{
+  --  "mason-org/mason-lspconfig.nvim",
+  --  opts = {},
+  --  dependencies = {
+  --    { "mason-org/mason.nvim", opts = {} },
+  --    "neovim/nvim-lspconfig",
+  --  },
+  --},
   {
-    "mason-org/mason-lspconfig.nvim",
-    opts = {},
-    dependencies = {
-      { "mason-org/mason.nvim", opts = {} },
-      "neovim/nvim-lspconfig",
-    },
+      "L3MON4D3/LuaSnip",
+      -- install jsregexp (optional!).
+      build = "make install_jsregexp"
   },
   "nvim-tree/nvim-tree.lua",
   "tpope/vim-vinegar",
@@ -31,14 +37,27 @@ return {
   "NLKNguyen/papercolor-theme",
   "tommcdo/vim-exchange",
   -- Is this used?
-  "Chiel92/vim-autoformat",
+  --"Chiel92/vim-autoformat",
   "neovim/nvim-lspconfig",
   "hrsh7th/cmp-nvim-lsp",
   "hrsh7th/cmp-buffer",
   "hrsh7th/cmp-path",
   "hrsh7th/cmp-cmdline",
   "hrsh7th/cmp-nvim-lsp-signature-help",
+  {
+    "ray-x/lsp_signature.nvim",
+    event = "InsertEnter",
+    opts = {
+      bind = true,
+      handler_opts = {
+        border = "rounded"
+      },
+      floating_window = false,
+      toggle_key = '<C-J>'
+    }
+  },
   "hrsh7th/nvim-cmp",
+  -- couldn't quite get this to work
   --"zjp-CN/nvim-cmp-lsp-rs",
   "Decodetalkers/csharpls-extended-lsp.nvim",
   "ojroques/vim-oscyank",
