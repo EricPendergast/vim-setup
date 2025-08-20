@@ -140,13 +140,16 @@ cmp.setup({
         ['<C-y>'] = cmp.mapping.scroll_docs(4),
     },
     sources = cmp.config.sources({
-        { name = 'nvim_lsp_signature_help' },
-        { name = 'nvim_lsp' },
         --{ name = 'buffer' },
         --{ name = 'vsnip' }, -- For vsnip users.
         -- { name = 'luasnip' }, -- For luasnip users.
         -- { name = 'ultisnips' }, -- For ultisnips users.
         -- { name = 'snippy' }, -- For snippy users.
+        { name = "nvim_lsp" },
+        { name = "nvim_lua" },
+    }, {
+        { name = "path" },
+        { name = "buffer", keyword_length = 3 },
     })
 })
 
@@ -272,6 +275,11 @@ require('lspconfig').gopls.setup {
 }
 -- :MasonInstall json-lsp
 require'lspconfig'.jsonls.setup {
+    capabilities = capabilities,
+    on_attach = on_attach,
+}
+
+require'lspconfig'.rust_analyzer.setup {
     capabilities = capabilities,
     on_attach = on_attach,
 }

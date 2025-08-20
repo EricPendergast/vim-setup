@@ -39,6 +39,7 @@ return {
   "hrsh7th/cmp-cmdline",
   "hrsh7th/cmp-nvim-lsp-signature-help",
   "hrsh7th/nvim-cmp",
+  --"zjp-CN/nvim-cmp-lsp-rs",
   "Decodetalkers/csharpls-extended-lsp.nvim",
   "ojroques/vim-oscyank",
   "tpope/vim-rhubarb",
