@@ -91,6 +91,9 @@ cmp.setup({
     --        -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
     --    end,
     --},
+    completion = {
+        autocomplete = false, -- disable auto popup
+    },
     window = {
         -- completion = cmp.config.window.bordered(),
         documentation = cmp.config.window.bordered(),
