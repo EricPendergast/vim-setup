@@ -30,7 +30,7 @@ return {
   "mileszs/ack.vim",
   "junegunn/fzf",
   "junegunn/fzf.vim",
-  "scrooloose/nerdcommenter",
+  "numToStr/Comment.nvim",
   "tpope/vim-fugitive",
   "tpope/vim-unimpaired",
   "AndrewRadev/undoquit.vim",
