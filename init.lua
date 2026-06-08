@@ -163,6 +163,7 @@ cmp.setup({
 
 vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float)
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
+vim.keymap.set('n', 'K', vim.lsp.buf.hover)
 
 vim.keymap.set('n', '<C-_>', '<Plug>(comment_toggle_linewise_current)')
 vim.keymap.set('v', '<C-_>', '<Plug>(comment_toggle_linewise_visual)')
