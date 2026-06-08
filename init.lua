@@ -20,6 +20,9 @@ vim.keymap.set('n', '<leader>w', function()
   end
 end, { noremap = true })
 
+require('telescope').load_extension("dir")
+require('telescope').load_extension("live_grep_args")
+
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>fa', function()
@@ -30,7 +33,9 @@ vim.keymap.set('n', '<leader>fa', function()
         file_ignore_patterns={".git/"}
     })
 end, { desc = 'Telescope find all files' })
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
+-- vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
+vim.keymap.set('n', '<leader>fg', require("telescope").extensions.live_grep_args.live_grep_args, { desc = 'Telescope live grep args' })
+
 vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
 vim.keymap.set('n', '<C-P>', builtin.find_files, { desc = 'Telescope find files' })

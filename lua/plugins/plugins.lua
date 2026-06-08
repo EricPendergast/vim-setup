@@ -25,6 +25,14 @@ return {
       -- install jsregexp (optional!).
       build = "make install_jsregexp"
   },
+  {
+    "nvim-telescope/telescope-live-grep-args.nvim",
+    dependencies = { "nvim-telescope/telescope.nvim" },
+  },
+  {
+    "princejoogie/dir-telescope.nvim",
+    dependencies = { "nvim-telescope/telescope.nvim" },
+  },
   "nvim-tree/nvim-tree.lua",
   "tpope/vim-vinegar",
   "mileszs/ack.vim",
