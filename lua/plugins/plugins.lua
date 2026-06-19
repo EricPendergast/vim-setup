@@ -38,7 +38,8 @@ return {
   "mileszs/ack.vim",
   "junegunn/fzf",
   "junegunn/fzf.vim",
-  "numToStr/Comment.nvim",
+  -- Using builtin commenting behavior for now
+  -- "numToStr/Comment.nvim",
   "tpope/vim-fugitive",
   "tpope/vim-unimpaired",
   "AndrewRadev/undoquit.vim",
