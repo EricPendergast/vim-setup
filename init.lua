@@ -261,6 +261,16 @@ vim.lsp.config('lua_ls', {
 vim.lsp.enable("lua_ls")
 
 -- :MasonInstall csharp-language-server 
+vim.lsp.config("csharp_ls", {
+  root_dir = function(bufnr, on_dir)
+    local bufname = vim.api.nvim_buf_get_name(bufnr)
+    if bufname:match("^fugitive://") then
+      return  -- don't attach
+    end
+    -- fall back to default root_dir detection
+    on_dir(vim.fs.root(bufnr, { "*.sln", "*.csproj" }))
+  end,
+})
 vim.lsp.enable("csharp_ls")
 require("csharpls_extended").buf_read_cmd_bind()
 
